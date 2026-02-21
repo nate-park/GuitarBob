@@ -1,86 +1,147 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Mascot from '../components/Mascot';
-import BobWithSpeech from '../components/BobWithSpeech';
+import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TopBar from '../components/TopBar';
-import ProgressBar from '../components/ProgressBar';
-
-const STEPS = [
-  { title: 'Play the first chord', chord: 'C', tip: 'Place your fingers and strum once.' },
-  { title: 'Now try G', chord: 'G', tip: 'Classic G shape – you got this!' },
-  { title: 'Switch to Am', chord: 'Am', tip: 'Just one finger change from C.' },
-  { title: 'Add F', chord: 'F', tip: 'The F barre – take your time.' },
-  { title: 'Put them together', chord: 'C → G → Am → F', tip: 'Slow and steady. Bob believes in you! 🎸' },
-];
+import ChordTimeline from '../components/ChordTimeline';
+import { MOCK_SONG } from '../data/mockSongData';
 
 export default function Practice() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [step, setStep] = useState(0);
-  const [feedback, setFeedback] = useState(null); // 'correct' | 'try' | null
-  const current = STEPS[step];
-  const isLast = step === STEPS.length - 1;
+  const [currentTime, setCurrentTime] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentChord, setCurrentChord] = useState(null);
+  const rafRef = useRef(null);
+  const startTimeRef = useRef(null);
+  const pausedTimeRef = useRef(0);
 
-  const handleNext = () => {
-    if (isLast) {
-      setFeedback('correct');
-      setTimeout(() => navigate('/'), 1500);
-      return;
+  // Use RAF for smooth time updates with a timer
+  useEffect(() => {
+    if (isPlaying) {
+      const startTime = Date.now() - pausedTimeRef.current;
+      
+      const updateTime = () => {
+        const elapsed = Date.now() - startTime;
+        setCurrentTime(elapsed);
+        
+        // Stop at end of song
+        if (elapsed >= MOCK_SONG.duration) {
+          setIsPlaying(false);
+          pausedTimeRef.current = MOCK_SONG.duration;
+        } else {
+          rafRef.current = requestAnimationFrame(updateTime);
+        }
+      };
+      rafRef.current = requestAnimationFrame(updateTime);
+    } else {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
     }
-    setFeedback('correct');
-    setTimeout(() => {
-      setStep((s) => s + 1);
-      setFeedback(null);
-    }, 800);
+    return () => {
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
+  }, [isPlaying]);
+
+  const handlePlayPause = () => {
+    if (isPlaying) {
+      pausedTimeRef.current = currentTime;
+      setIsPlaying(false);
+    } else {
+      setIsPlaying(true);
+    }
   };
 
-  const handleTryAgain = () => {
-    setFeedback('try');
-    setTimeout(() => setFeedback(null), 1200);
+  const handleStop = () => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+    pausedTimeRef.current = 0;
+  };
+
+  const handleReplay = () => {
+    setCurrentTime(0);
+    pausedTimeRef.current = 0;
+    setIsPlaying(true);
+  };
+
+  const handleSeek = (time) => {
+    if (!isPlaying) {
+      setCurrentTime(time);
+      pausedTimeRef.current = time;
+    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
       <TopBar streak={1} hearts={3} xp={50} />
-      <main className="flex-1 px-6 py-8 max-w-2xl mx-auto">
-        <ProgressBar current={step + 1} total={STEPS.length} label="Practice" />
-        <div className="mt-8 flex justify-center">
-          <Mascot pose={feedback === 'correct' ? 'happy' : feedback === 'try' ? 'sad' : 'teaching'} size={140} />
-        </div>
-        <div className="mt-6 speech-bubble text-center">
-          <h3 className="font-display text-xl text-bob-green-dark mb-2">{current.title}</h3>
-          <p className="font-body text-gray-700 mb-4">{current.tip}</p>
-          <p className="font-display text-3xl text-bob-blue">{current.chord}</p>
-        </div>
-        {feedback === 'correct' && (
-          <p className="text-center font-display text-bob-green text-xl mt-4 animate-pop">
-            🎉 Nice! Keep going!
+      <main className="flex-1 px-6 py-8 max-w-4xl mx-auto w-full">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="font-display text-4xl text-bob-green-dark mb-2">Practice Mode</h1>
+          <p className="font-body text-gray-600">
+            Play along with the chord progression
           </p>
-        )}
-        {feedback === 'try' && (
-          <p className="text-center font-body text-bob-orange mt-4">
-            No worries – try again. Use your guitar and audio interface!
-          </p>
-        )}
-        <div className="mt-8 flex gap-4">
-          <button
-            onClick={handleNext}
-            className="btn-bob-green flex-1"
-          >
-            {isLast ? 'Finish lesson 🏆' : 'I did it!'}
-          </button>
-          <button
-            onClick={handleTryAgain}
-            className="btn-bob-outline flex-1"
-          >
-            Listen again
-          </button>
         </div>
+
+        {/* Chord Timeline */}
+        <div className="mt-8">
+          <ChordTimeline
+            songData={MOCK_SONG}
+            currentTime={currentTime}
+            isPlaying={isPlaying}
+            onChordChange={setCurrentChord}
+          />
+        </div>
+
+        {/* Audio Controls */}
+        <div className="mt-8 bg-white rounded-3xl p-6 shadow-lg">
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={handlePlayPause}
+              className="px-8 py-3 bg-bob-green text-white rounded-full font-display font-semibold hover:bg-bob-green/90 transition shadow-lg"
+            >
+              {isPlaying ? '⏸ Pause' : '▶ Play'}
+            </button>
+            <button
+              onClick={handleStop}
+              className="px-8 py-3 bg-gray-400 text-white rounded-full font-display font-semibold hover:bg-gray-500 transition shadow-lg"
+            >
+              ■ Stop
+            </button>
+            <button
+              onClick={handleReplay}
+              className="px-8 py-3 bg-bob-blue text-white rounded-full font-display font-semibold hover:bg-bob-blue/90 transition shadow-lg"
+            >
+              ↻ Replay
+            </button>
+          </div>
+
+          {/* Seek Position */}
+          <div className="text-center mt-6">
+            <p className="font-body text-sm text-gray-600 mb-2">Seek Position</p>
+            <input
+              type="range"
+              min="0"
+              max={MOCK_SONG.duration}
+              value={currentTime}
+              onChange={(e) => {
+                const time = Number(e.target.value);
+                handleSeek(time);
+              }}
+              className="w-full max-w-xs"
+            />
+            <p className="font-body text-xs text-gray-500 mt-2">
+              {Math.floor(currentTime / 1000)}s / {Math.floor(MOCK_SONG.duration / 1000)}s
+            </p>
+          </div>
+        </div>
+
+        {/* Back button */}
         <button
-          onClick={() => navigate(location.state?.file ? '/results' : '/')}
-          className="font-body text-gray-500 mt-4 block mx-auto"
+          onClick={() => navigate('/')}
+          className="font-body text-gray-500 hover:text-gray-700 mt-8 block mx-auto"
         >
-          ← Back
+          ← Back to Home
         </button>
       </main>
     </div>

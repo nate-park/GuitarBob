@@ -11,7 +11,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={0} hearts={3} xp={0} />
+      <TopBar streak={0} xp={0} />
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-2xl mx-auto">
         <div className="flex justify-center mb-4">
           <span className="text-5xl animate-bounce-soft inline-block">🎸</span>
@@ -38,13 +38,13 @@ export default function Home() {
             to="/practice"
             className="btn-bob-outline flex-1 text-center no-underline py-4"
           >
-            Practice mode
+            Practice
           </Link>
           <Link
-            to="/tuner"
+            to="/chords"
             className="btn-bob-outline flex-1 text-center no-underline py-4"
           >
-            Tuner
+            Chords
           </Link>
         </div>
         <p className="font-body text-sm text-gray-500 mt-8 text-center">
