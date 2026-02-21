@@ -32,3 +32,72 @@ body {
            font-body text-gray-800 text-lg border-2 border-bob-green/20;
   }
 }
+
+/* Wormhole: rings fly toward center (into the screen) */
+.wormhole-ring {
+  transform: translate(-50%, -50%) scale(1.2);
+  transform-origin: center center;
+  animation: wormhole-ring 2.2s linear infinite;
+  box-shadow: 0 0 20px rgba(88, 204, 2, 0.3);
+}
+@keyframes wormhole-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+  }
+}
+
+/* Tunnel lines receding into center (flying into the screen) */
+.wormhole-line {
+  animation: wormhole-line 1.6s linear infinite;
+  transform-origin: center center;
+}
+@keyframes wormhole-line {
+  0% {
+    transform: translate(-50%, -50%) scaleX(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scaleX(0);
+    opacity: 0;
+  }
+}
+
+/* Center glow at end of tunnel */
+.wormhole-glow {
+  animation: wormhole-glow 1.5s ease-in-out infinite;
+}
+@keyframes wormhole-glow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.hyperspace-pulse {
+  animation: hyperspace-pulse 0.8s ease-in-out infinite;
+}
+@keyframes hyperspace-pulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 20px rgba(88, 204, 2, 0.6));
+  }
+  50% {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 40px rgba(88, 204, 2, 0.9));
+  }
+}
