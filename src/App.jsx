@@ -6,6 +6,7 @@ import Upload from './pages/Upload';
 import Processing from './pages/Processing';
 import Results from './pages/Results';
 import Practice from './pages/Practice';
+import CharacterShop from './pages/CharacterShop';
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<CharacterShop />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/processing" element={<Processing />} />
         <Route path="/results" element={<Results />} />

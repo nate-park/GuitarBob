@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCharacter, CHARACTERS } from '../context/CharacterContext';
 import Mascot from './Mascot';
-import CharacterSelectModal from './CharacterSelectModal';
 
 export default function TopBar({ streak = 0, hearts = 3, xp = 0 }) {
   const { characterId } = useCharacter();
-  const [showCharacterSelect, setShowCharacterSelect] = useState(false);
   const currentName = CHARACTERS.find((c) => c.id === characterId)?.name ?? 'Bob';
 
   return (
@@ -16,15 +14,14 @@ export default function TopBar({ streak = 0, hearts = 3, xp = 0 }) {
           <span className="font-display text-lg sm:text-2xl text-bob-green-dark truncate">GuitarBob</span>
           <span className="text-lg sm:text-2xl shrink-0">🎸</span>
         </Link>
-        <button
-          type="button"
-          onClick={() => setShowCharacterSelect(true)}
-          className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-lesson-border bg-lesson-bg px-2 py-1 sm:px-2.5 sm:py-1.5 hover:border-bob-green/50 transition shrink-0 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-1"
+        <Link
+          to="/shop"
+          className="flex items-center justify-center gap-1.5 rounded-xl border-2 border-lesson-border bg-lesson-bg px-2 py-1 sm:px-2.5 sm:py-1.5 hover:border-bob-green/50 transition shrink-0 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-1 no-underline"
           title={`Choose tutor (${currentName})`}
         >
           <Mascot pose="default" size={28} className="sm:w-8 sm:h-8 w-7 h-7" />
           <span className="font-body text-xs sm:text-sm text-gray-700 truncate max-w-[4rem] sm:max-w-none">{currentName}</span>
-        </button>
+        </Link>
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 flex-1 justify-end">
           {streak > 0 && (
             <div className="flex items-center gap-0.5 sm:gap-1 bg-bob-orange/20 rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-1.5">
@@ -50,9 +47,6 @@ export default function TopBar({ streak = 0, hearts = 3, xp = 0 }) {
           )}
         </div>
       </div>
-      {showCharacterSelect && (
-        <CharacterSelectModal onClose={() => setShowCharacterSelect(false)} />
-      )}
     </header>
   );
 }
