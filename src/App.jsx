@@ -7,6 +7,7 @@ import Processing from './pages/Processing';
 import Results from './pages/Results';
 import Practice from './pages/Practice';
 import CharacterShop from './pages/CharacterShop';
+import Tuner from './pages/Tuner';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/shop" element={<CharacterShop />} />
+        <Route path="/tuner" element={<Tuner />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/processing" element={<Processing />} />
         <Route path="/results" element={<Results />} />
