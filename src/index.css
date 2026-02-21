@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: linear-gradient(180deg, #E8F5E9 0%, #FFF8E1 50%, #E3F2FD 100%);
+  min-height: 100vh;
+}
+
+/* Duolingo-style button base */
+@layer components {
+  .btn-bob {
+    @apply font-display font-semibold text-lg rounded-2xl px-6 py-4 shadow-bob-sm
+           transition transform active:translate-y-0.5 active:shadow-none
+           border-0 cursor-pointer;
+  }
+  .btn-bob-green {
+    @apply btn-bob bg-bob-green text-white hover:bg-bob-green-dark shadow-bob;
+  }
+  .btn-bob-outline {
+    @apply btn-bob bg-white text-bob-green-dark border-4 border-bob-green;
+  }
+  .speech-bubble {
+    @apply relative bg-white rounded-2xl rounded-bl-none px-5 py-4 shadow-card
+           font-body text-gray-800 text-lg border-2 border-bob-green/20;
+  }
+}
