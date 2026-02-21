@@ -9,7 +9,6 @@ const MASCOT_MAP = { bob: Bob, luna: Luna, riff: Riff };
 
 export default function CharacterShop() {
   const { characterId, setCharacterId } = useCharacter();
-  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-bob-green/20 via-white to-bob-blue/10">
