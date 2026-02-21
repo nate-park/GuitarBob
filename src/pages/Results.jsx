@@ -21,7 +21,7 @@ export default function Results() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={1} hearts={3} xp={25} />
+      <TopBar streak={1} xp={25} />
       <main className="flex-1 px-6 py-8 max-w-2xl mx-auto">
         <BobWithSpeech
           message="Here are the chords and tabs I found! When you're ready, we can practice them together."

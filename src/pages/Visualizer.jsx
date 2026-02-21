@@ -66,7 +66,7 @@ export default function Visualizer() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
-      <TopBar streak={1} hearts={3} xp={50} />
+      <TopBar streak={1} xp={50} />
       <main className="flex-1 px-6 py-8 max-w-6xl mx-auto w-full">
         {/* Header */}
         <div className="mb-8">

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCharacter, CHARACTERS } from '../context/CharacterContext';
 import Mascot from './Mascot';
 
-export default function TopBar({ streak = 0, hearts = 3, xp = 0 }) {
+export default function TopBar({ streak = 0, xp = 0 }) {
   const { characterId } = useCharacter();
   const currentName = CHARACTERS.find((c) => c.id === characterId)?.name ?? 'Bob';
 
@@ -29,16 +29,6 @@ export default function TopBar({ streak = 0, hearts = 3, xp = 0 }) {
               <span className="font-display font-semibold text-bob-orange-dark text-sm sm:text-base">{streak}</span>
             </div>
           )}
-          <div className="flex items-center gap-0.5">
-            {[1, 2, 3].map((i) => (
-              <span
-                key={i}
-                className={`text-lg sm:text-2xl ${i <= hearts ? '' : 'opacity-30 grayscale'}`}
-              >
-                ❤️
-              </span>
-            ))}
-          </div>
           {xp >= 0 && (
             <div className="flex items-center gap-0.5 sm:gap-1 bg-bob-blue/20 rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-1.5">
               <span className="font-display font-semibold text-bob-blue-dark text-sm sm:text-base">{xp}</span>

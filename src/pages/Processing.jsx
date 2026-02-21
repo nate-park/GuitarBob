@@ -32,7 +32,7 @@ export default function Processing() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={0} hearts={3} xp={0} />
+      <TopBar streak={0} xp={0} />
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         <Mascot pose="thinking" size={200} className="mb-8" />
         <h2 className="font-display text-2xl text-bob-green-dark mb-2">

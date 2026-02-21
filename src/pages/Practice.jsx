@@ -9,17 +9,22 @@ export default function Practice() {
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentChord, setCurrentChord] = useState(null);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const rafRef = useRef(null);
-  const startTimeRef = useRef(null);
+  const playStartTimeRef = useRef(null);
   const pausedTimeRef = useRef(0);
 
-  // Use RAF for smooth time updates with a timer
+  const SPEEDS = [0.25, 0.5, 0.75, 1];
+
+  // Use RAF for smooth time updates with a timer (scaled by playback speed)
   useEffect(() => {
     if (isPlaying) {
-      const startTime = Date.now() - pausedTimeRef.current;
+      playStartTimeRef.current = Date.now();
       
       const updateTime = () => {
-        const elapsed = Date.now() - startTime;
+        const realElapsed = Date.now() - playStartTimeRef.current;
+        const elapsed = pausedTimeRef.current + realElapsed * playbackSpeed;
+        pausedTimeRef.current = elapsed;
         setCurrentTime(elapsed);
         
         // Stop at end of song
@@ -41,7 +46,7 @@ export default function Practice() {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [isPlaying, playbackSpeed]);
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -73,7 +78,7 @@ export default function Practice() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
-      <TopBar streak={1} hearts={3} xp={50} />
+      <TopBar streak={1} xp={50} />
       <main className="flex-1 px-6 py-8 max-w-4xl mx-auto w-full">
         {/* Header */}
         <div className="mb-8">
@@ -95,6 +100,23 @@ export default function Practice() {
 
         {/* Audio Controls */}
         <div className="mt-8 bg-white rounded-3xl p-6 shadow-lg">
+          {/* Playback speed */}
+          <div className="flex gap-2 justify-center mb-4 flex-wrap">
+            <span className="font-body text-sm text-gray-600 self-center mr-2">Speed:</span>
+            {SPEEDS.map((speed) => (
+              <button
+                key={speed}
+                onClick={() => setPlaybackSpeed(speed)}
+                className={`px-4 py-2 rounded-full font-display font-semibold transition ${
+                  playbackSpeed === speed
+                    ? 'bg-bob-green text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {speed}x
+              </button>
+            ))}
+          </div>
           <div className="flex gap-4 justify-center">
             <button
               onClick={handlePlayPause}

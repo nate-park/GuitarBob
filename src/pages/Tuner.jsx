@@ -84,7 +84,7 @@ export default function Tuner() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={0} hearts={3} xp={0} />
+      <TopBar streak={0} xp={0} />
       <main className="flex-1 px-6 py-8 max-w-2xl mx-auto w-full">
         <h1 className="font-display text-2xl sm:text-3xl text-bob-green-dark text-center mb-2">
           🎸 Tuner
