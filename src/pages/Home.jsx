@@ -40,6 +40,12 @@ export default function Home() {
           >
             Practice mode
           </Link>
+          <Link
+            to="/tuner"
+            className="btn-bob-outline flex-1 text-center no-underline py-4"
+          >
+            Tuner
+          </Link>
         </div>
         <p className="font-body text-sm text-gray-500 mt-8 text-center">
           Use your electric guitar + audio interface to play along!
