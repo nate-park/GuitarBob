@@ -11,17 +11,22 @@ export default function Visualizer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentChord, setCurrentChord] = useState(null);
   const [showTabs, setShowTabs] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const rafRef = useRef(null);
-  const startTimeRef = useRef(null);
+  const playStartTimeRef = useRef(null);
   const pausedTimeRef = useRef(0);
 
-  // Timer-based playback
+  const SPEEDS = [0.25, 0.5, 0.75, 1];
+
+  // Timer-based playback (scaled by playback speed)
   useEffect(() => {
     if (isPlaying) {
-      startTimeRef.current = Date.now() - pausedTimeRef.current;
+      playStartTimeRef.current = Date.now();
 
       const updateTime = () => {
-        const elapsed = Date.now() - startTimeRef.current;
+        const realElapsed = Date.now() - playStartTimeRef.current;
+        const elapsed = pausedTimeRef.current + realElapsed * playbackSpeed;
+        pausedTimeRef.current = elapsed;
         setCurrentTime(elapsed);
 
         if (elapsed >= MOCK_SONG.duration) {
@@ -42,7 +47,7 @@ export default function Visualizer() {
         cancelAnimationFrame(rafRef.current);
       }
     };
-  }, [isPlaying]);
+  }, [isPlaying, playbackSpeed]);
 
   const handlePlayPause = () => {
     if (isPlaying) {
@@ -96,6 +101,23 @@ export default function Visualizer() {
 
           {/* Controls */}
           <div className="bg-white rounded-3xl p-6 shadow-lg">
+            {/* Playback speed */}
+            <div className="flex gap-2 justify-center mb-4 flex-wrap">
+              <span className="font-body text-sm text-gray-600 self-center mr-2">Speed:</span>
+              {SPEEDS.map((speed) => (
+                <button
+                  key={speed}
+                  onClick={() => setPlaybackSpeed(speed)}
+                  className={`px-4 py-2 rounded-full font-display font-semibold transition ${
+                    playbackSpeed === speed
+                      ? 'bg-bob-green text-white shadow-md'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
             <div className="flex gap-4 justify-center mb-6">
               <button
                 onClick={handlePlayPause}
