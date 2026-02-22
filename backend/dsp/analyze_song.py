@@ -3,7 +3,7 @@ import numpy as np
 from .chords import best_chord_for_chroma, smooth_labels, segment_labels
 
 def analyze_wav_for_chords(wav_path, hop_length=2048):
-    y, sr = librosa.load(wav_path, sr=None, mono=True, duration=60)
+    y, sr = librosa.load(wav_path, sr=None, mono=True, duration=30)
 
     tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
 

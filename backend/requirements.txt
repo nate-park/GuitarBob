@@ -8,3 +8,7 @@ scipy==1.11.4
 librosa==0.10.2.post1
 soundfile==0.12.1
 sounddevice==0.4.7
+
+# basic-pitch: accurate note transcription (macOS only - uses coremltools)
+# Uncomment on Mac: pip install basic-pitch
+# basic-pitch
