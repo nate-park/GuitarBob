@@ -66,7 +66,7 @@ async def stream_live_guitar_events(
             energy = float(np.sqrt(np.mean(buf**2)) + 1e-12)
 
             # gate silence: prevents fake “B5 @ 1000Hz” when input is basically silent
-            if energy < 0.001:
+            if energy < 1e-5:
                 now = time.time()
                 if now - last_send > 0.05:
                     yield {
