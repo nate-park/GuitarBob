@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { useCharacter, CHARACTERS } from '../context/CharacterContext';
 import Mascot from './Mascot';
 
-export default function TopBar({ streak = 0, xp = 0 }) {
-  const { characterId } = useCharacter();
+export default function TopBar({ streak = 0 }) {
+  const { characterId, xp } = useCharacter();
   const currentName = CHARACTERS.find((c) => c.id === characterId)?.name ?? 'Bob';
 
   return (

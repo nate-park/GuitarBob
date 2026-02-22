@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCharacter, CHARACTERS } from '../context/CharacterContext';
 import Bob from './Bob';
-import Luna from './Luna';
 import Riff from './Riff';
+import UnlockCelebration from './UnlockCelebration';
 
-const MASCOT_MAP = { bob: Bob, luna: Luna, riff: Riff };
+const MASCOT_MAP = { bob: Bob, riff: Riff };
 
 export default function CharacterSelectModal({ onClose }) {
-  const { characterId, setCharacterId } = useCharacter();
+  const { characterId, setCharacterId, unlockCharacter, isUnlocked, canUnlock } = useCharacter();
+  const [celebrating, setCelebrating] = useState(null);
 
   return (
     <div
@@ -47,29 +48,53 @@ export default function CharacterSelectModal({ onClose }) {
             <h3 className="font-display text-xl text-bob-green-dark mb-4">
               Choose your tutor
             </h3>
-            <div className="grid grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 max-w-sm mx-auto">
               {CHARACTERS.map((c) => {
                 const MascotComponent = MASCOT_MAP[c.id];
                 const isSelected = characterId === c.id;
+                const unlocked = isUnlocked(c.id);
+                const canUnlockNow = canUnlock(c.id);
+                const isLocked = !unlocked;
+                const handleClick = () => {
+                  if (canUnlockNow) {
+                    unlockCharacter(c.id);
+                    setCelebrating(c);
+                  } else if (unlocked) {
+                    setCharacterId(c.id);
+                  }
+                };
                 return (
                   <button
                     key={c.id}
                     type="button"
-                    onClick={() => setCharacterId(c.id)}
+                    onClick={handleClick}
+                    disabled={isLocked && !canUnlockNow}
                     className={`
-                      flex flex-col items-center p-4 sm:p-6 rounded-2xl border-4 transition transform hover:scale-[1.02] active:scale-[0.98]
-                      ${isSelected
+                      relative flex flex-col items-center p-4 sm:p-6 rounded-2xl border-4 transition transform bg-lesson-bg
+                      ${!canUnlockNow && isLocked ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02] active:scale-[0.98] cursor-pointer'}
+                      ${unlocked && isSelected
                         ? 'border-bob-green bg-bob-green/15 shadow-bob ring-2 ring-bob-green/50'
-                        : 'border-lesson-border bg-lesson-bg hover:border-bob-green/50'
+                        : canUnlockNow
+                          ? 'border-bob-orange/60 hover:border-bob-orange'
+                          : isLocked
+                            ? 'border-gray-300'
+                            : 'border-lesson-border hover:border-bob-green/50'
                       }
                     `}
                   >
+                    {isLocked && (
+                      <div className="absolute inset-0 flex items-center justify-center rounded-2xl bg-black/30 z-10">
+                        <span className="font-display font-semibold text-white text-sm px-3 py-1.5 rounded-xl bg-gray-800/90">
+                          {canUnlockNow ? '✨ Tap to unlock!' : `${c.unlockXp} XP to unlock`}
+                        </span>
+                      </div>
+                    )}
                     {MascotComponent && (
                       <MascotComponent pose="default" size={100} className="mb-3" />
                     )}
                     <span className="font-display font-semibold text-gray-800 text-lg">{c.name}</span>
                     <span className="text-2xl mt-1">{c.emoji}</span>
-                    {isSelected && (
+                    {isSelected && unlocked && (
                       <span className="font-body text-xs text-bob-green-dark mt-2 font-semibold">
                         Selected
                       </span>
@@ -79,6 +104,14 @@ export default function CharacterSelectModal({ onClose }) {
               })}
             </div>
           </section>
+
+          {celebrating && (
+            <UnlockCelebration
+              characterName={celebrating.name}
+              emoji={celebrating.emoji}
+              onClose={() => setCelebrating(null)}
+            />
+          )}
 
           {/* Skins section - placeholder for future */}
           <section className="mb-8">

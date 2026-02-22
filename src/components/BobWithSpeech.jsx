@@ -3,7 +3,7 @@ import Mascot from './Mascot';
 
 /**
  * Tutor + speech bubble – use for onboarding and step-by-step guidance.
- * Uses the currently selected character (Bob, Luna, or Riff).
+ * Uses the currently selected character (Bob or Riff).
  */
 export default function BobWithSpeech({
   message,
