@@ -29,19 +29,22 @@ const MusicNotes = ({ count = 8 }) => {
   });
 
   return (
-    <style>{`
-      @keyframes flyUp {
-        0% {
-          opacity: 1;
-          transform: translateY(0px) translateX(var(--tx, 0));
+    <>
+      <style>{`
+        @keyframes flyUp {
+          0% {
+            opacity: 1;
+            transform: translateY(0px) translateX(var(--tx, 0));
+          }
+          100% {
+            opacity: 0;
+            transform: translateY(-200px) translateX(var(--tx, 0));
+          }
         }
-        100% {
-          opacity: 0;
-          transform: translateY(-200px) translateX(var(--tx, 0));
-        }
-      }
-    `}</style>
-  ) || notes;
+      `}</style>
+      {notes}
+    </>
+  );
 };
 
 export default function Home() {
