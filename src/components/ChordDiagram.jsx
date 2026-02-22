@@ -46,73 +46,73 @@ import React from 'react';
 const CHORD_DATA = {
   // ==== MAJOR CHORDS ====
   C: {
-    name: 'C Major',
+    name: 'C',
     frets: [0, 3, 2, 0, 1, 0],
     fingers: ['open', '3', '2', 'open', '1', 'open'],
     barre: null,
   },
   Csharp: {
-    name: 'C# Major',
+    name: 'C#',
     frets: [4, 4, 6, 6, 6, 4],
     fingers: ['1', '1', '3', '4', '2', '1'],
     barre: 4,
   },
   D: {
-    name: 'D Major',
+    name: 'D',
     frets: [-1, -1, 0, 2, 3, 2],
     fingers: ['mute', 'mute', 'open', '1', '3', '2'],
     barre: null,
   },
   Dsharp: {
-    name: 'D# Major',
+    name: 'D#',
     frets: [-1, -1, 3, 5, 5, 5],
     fingers: ['mute', 'mute', '1', '2', '3', '4'],
     barre: null,
   },
   E: {
-    name: 'E Major',
+    name: 'E',
     frets: [0, 2, 2, 1, 0, 0],
     fingers: ['open', '2', '3', '1', 'open', 'open'],
     barre: null,
   },
   F: {
-    name: 'F Major',
+    name: 'F',
     frets: [1, 3, 3, 2, 1, 1],
     fingers: ['1', '3', '4', '2', '1', '1'],
     barre: 1,
   },
   Fsharp: {
-    name: 'F# Major',
+    name: 'F#',
     frets: [2, 4, 4, 3, 2, 2],
     fingers: ['1', '3', '4', '2', '1', '1'],
     barre: 2,
   },
   G: {
-    name: 'G Major',
+    name: 'G',
     frets: [3, 2, 0, 0, 0, 3],
     fingers: ['3', '2', 'open', 'open', 'open', '3'],
     barre: null,
   },
   Gsharp: {
-    name: 'G# Major',
+    name: 'G#',
     frets: [4, 6, 6, 5, 4, 4],
     fingers: ['1', '3', '4', '2', '1', '1'],
     barre: 4,
   },
   A: {
-    name: 'A Major',
+    name: 'A',
     frets: [0, 0, 2, 2, 2, 0],
     fingers: ['open', 'open', '1', '2', '3', 'open'],
     barre: null,
   },
   Asharp: {
-    name: 'A# Major',
+    name: 'A#',
     frets: [1, 1, 3, 3, 3, 1],
     fingers: ['1', '1', '3', '4', '2', '1'],
     barre: 1,
   },
   B: {
-    name: 'B Major',
+    name: 'B',
     frets: [2, 4, 4, 4, 4, 2],
     fingers: ['1', '3', '4', '2', '1', '1'],
     barre: 2,
@@ -120,83 +120,83 @@ const CHORD_DATA = {
 
   // ==== MINOR CHORDS ====
   Am: {
-    name: 'A Minor',
+    name: 'Am',
     frets: [0, 0, 2, 2, 1, 0],
     fingers: ['open', 'open', '1', '2', '3', 'open'],
     barre: null,
   },
   Asharp_m: {
-    name: 'A# Minor',
+    name: 'A#m',
     frets: [1, 1, 3, 3, 2, 1],
     fingers: ['1', '1', '3', '4', '2', '1'],
     barre: 1,
   },
   Bm: {
-    name: 'B Minor',
+    name: 'Bm',
     frets: [2, 3, 4, 4, 3, 2],
     fingers: ['1', '2', '3', '4', '2', '1'],
     barre: null,
   },
   Cm: {
-    name: 'C Minor',
+    name: 'Cm',
     frets: [3, 3, 5, 5, 4, 3],
     fingers: ['1', '1', '3', '4', '2', '1'],
     barre: 3,
   },
   Csharp_m: {
-    name: 'C# Minor',
+    name: 'C#m',
     frets: [4, 4, 6, 6, 5, 4],
     fingers: ['1', '1', '3', '4', '2', '1'],
     barre: 4,
   },
   Dm: {
-    name: 'D Minor',
+    name: 'Dm',
     frets: [-1, -1, 0, 2, 3, 1],
     fingers: ['mute', 'mute', 'open', '1', '3', '2'],
     barre: null,
   },
   Dsharp_m: {
-    name: 'D# Minor',
+    name: 'D#m',
     frets: [-1, -1, 3, 5, 4, 3],
     fingers: ['mute', 'mute', '1', '3', '2', '1'],
     barre: null,
   },
   Em: {
-    name: 'E Minor',
+    name: 'Em',
     frets: [0, 2, 2, 0, 0, 0],
     fingers: ['open', '1', '2', 'open', 'open', 'open'],
     barre: null,
   },
   Fm: {
-    name: 'F Minor',
+    name: 'Fm',
     frets: [1, 3, 3, 1, 1, 1],
     fingers: ['1', '3', '4', '1', '1', '1'],
     barre: 1,
   },
   Fsharp_m: {
-    name: 'F# Minor',
+    name: 'F#m',
     frets: [2, 4, 4, 2, 2, 2],
     fingers: ['1', '3', '4', '1', '1', '1'],
     barre: 2,
   },
   Gm: {
-    name: 'G Minor',
+    name: 'Gm',
     frets: [3, 5, 5, 3, 3, 3],
     fingers: ['1', '3', '4', '1', '1', '1'],
     barre: 3,
   },
   Gsharp_m: {
-    name: 'G# Minor',
+    name: 'G#m',
     frets: [4, 6, 6, 4, 4, 4],
     fingers: ['1', '3', '4', '1', '1', '1'],
     barre: 4,
   },
 
-  // ==== DOMINANT 7 CHORDS ====
+  // ==== DOMINANT 7 CHORDS (guitar-chord.org) ====
   C7: {
     name: 'C7',
-    frets: [0, 3, 2, 3, 1, 0],
-    fingers: ['open', '3', '2', '4', '1', 'open'],
+    frets: [-1, 3, 2, 3, 1, 0],
+    fingers: ['mute', '3', '2', '4', '1', 'open'],
     barre: null,
   },
   D7: {
@@ -207,8 +207,8 @@ const CHORD_DATA = {
   },
   E7: {
     name: 'E7',
-    frets: [0, 2, 2, 1, 3, 0],
-    fingers: ['open', '1', '2', 'open', '3', 'open'],
+    frets: [0, 2, 0, 1, 0, 0],
+    fingers: ['open', '2', 'open', '1', 'open', 'open'],
     barre: null,
   },
   F7: {
@@ -225,14 +225,14 @@ const CHORD_DATA = {
   },
   A7: {
     name: 'A7',
-    frets: [0, 0, 2, 0, 2, 0],
-    fingers: ['open', 'open', '1', 'open', '2', 'open'],
+    frets: [-1, 0, 2, 0, 2, 0],
+    fingers: ['mute', 'open', '1', 'open', '2', 'open'],
     barre: null,
   },
   B7: {
     name: 'B7',
-    frets: [2, 4, 2, 4, 3, 2],
-    fingers: ['1', '3', '1', '4', '2', '1'],
+    frets: [-1, 2, 1, 2, 0, 2],
+    fingers: ['mute', '2', '1', '3', 'open', '4'],
     barre: null,
   },
 
@@ -316,29 +316,29 @@ const CHORD_DATA = {
     barre: null,
   },
 
-  // ==== DIMINISHED CHORDS ====
+  // ==== DIMINISHED CHORDS (guitar-chord.org movable shapes) ====
   Cdim: {
-    name: 'C Diminished',
-    frets: [3, 4, 2, 3, 1, 3],
-    fingers: ['1', '2', 'open', '1', '1', '1'],
+    name: 'Cdim',
+    frets: [-1, -1, 3, 4, 5, 4],
+    fingers: ['mute', 'mute', '1', '2', '3', '4'],
     barre: null,
   },
   Bdim: {
-    name: 'B Diminished',
-    frets: [2, 3, 1, 2, 0, 2],
-    fingers: ['1', '2', 'open', '1', 'open', '1'],
+    name: 'Bdim',
+    frets: [-1, -1, 2, 3, 4, 3],
+    fingers: ['mute', 'mute', '1', '2', '3', '4'],
     barre: null,
   },
 
   // ==== AUGMENTED CHORDS ====
   Caug: {
-    name: 'C Augmented',
+    name: 'Caug',
     frets: [0, 3, 2, 1, 1, 0],
     fingers: ['open', '3', '2', '1', '1', 'open'],
     barre: null,
   },
   Gaug: {
-    name: 'G Augmented',
+    name: 'Gaug',
     frets: [3, 2, 1, 0, 0, 3],
     fingers: ['3', '2', '1', 'open', 'open', '4'],
     barre: null,
@@ -360,13 +360,22 @@ export default function ChordDiagram({ chord, size = 140 }) {
   }
 
   // SVG dimensions
+  const leftFretMargin = 18; // Space for fret numbers on the left
   const padding = 10;
-  const topPadding = 40; // Extra space for open/mute indicators
+  const topPadding = 40;
   const nutHeight = 4;
-  const usableWidth = size - 2 * padding;
-  const stringSpacing = usableWidth / 5; // 6 strings divided into 5 spaces = equal spacing
+  const usableWidth = size - 2 * padding - leftFretMargin;
+  const stringSpacing = usableWidth / 5;
   const fretSpacing = (size * 1.3 - topPadding - padding - nutHeight) / 4;
-  const dotRadius = stringSpacing * 0.35;
+  const dotRadius = Math.min(stringSpacing * 0.32, fretSpacing * 0.2);
+
+  // Compute start fret so high chords fit in 4-fret view
+  const fretted = chordData.frets.filter((f) => f > 0);
+  const minFret = fretted.length ? Math.min(...fretted) : 1;
+  const startFret = Math.max(1, minFret > 1 ? minFret : 1);
+  const showStartFret = startFret > 1;
+
+  const gridLeft = padding + leftFretMargin;
 
   return (
     <div className="flex flex-col items-center">
@@ -376,9 +385,43 @@ export default function ChordDiagram({ chord, size = 140 }) {
         viewBox={`0 0 ${size} ${size * 1.3}`}
         className="bg-white rounded-lg border-2 border-gray-300"
       >
+        {/* Start fret label (e.g. "3fr") when chord is above fret 1 */}
+        {showStartFret && (
+          <text
+            x={padding + leftFretMargin / 2}
+            y={topPadding + nutHeight / 2 - 4}
+            textAnchor="middle"
+            fill="#333"
+            fontSize="10"
+            fontWeight="600"
+          >
+            {startFret}fr
+          </text>
+        )}
+
+        {/* Fret numbers on the left */}
+        {[1, 2, 3, 4].map((i) => {
+          const fretNum = startFret + i - 1;
+          const y = topPadding + nutHeight / 2 + (i - 0.5) * fretSpacing;
+          return (
+            <text
+              key={`fret-num-${i}`}
+              x={gridLeft - 4}
+              y={y}
+              textAnchor="end"
+              dominantBaseline="middle"
+              fill="#333"
+              fontSize="11"
+              fontWeight="600"
+            >
+              {fretNum}
+            </text>
+          );
+        })}
+
         {/* Nut (thick line at top) */}
         <line
-          x1={padding}
+          x1={gridLeft}
           y1={topPadding + nutHeight / 2}
           x2={size - padding}
           y2={topPadding + nutHeight / 2}
@@ -390,7 +433,7 @@ export default function ChordDiagram({ chord, size = 140 }) {
         {[1, 2, 3, 4].map((fret) => (
           <line
             key={`fret-${fret}`}
-            x1={padding}
+            x1={gridLeft}
             y1={topPadding + nutHeight / 2 + fret * fretSpacing}
             x2={size - padding}
             y2={topPadding + nutHeight / 2 + fret * fretSpacing}
@@ -403,9 +446,9 @@ export default function ChordDiagram({ chord, size = 140 }) {
         {[0, 1, 2, 3, 4, 5].map((string) => (
           <line
             key={`string-${string}`}
-            x1={padding + string * stringSpacing}
+            x1={gridLeft + string * stringSpacing}
             y1={topPadding}
-            x2={padding + string * stringSpacing}
+            x2={gridLeft + string * stringSpacing}
             y2={size * 1.3 - padding}
             stroke="#333"
             strokeWidth="2"
@@ -414,10 +457,9 @@ export default function ChordDiagram({ chord, size = 140 }) {
 
         {/* Finger dots and open/mute indicators */}
         {chordData.frets.map((fret, stringIdx) => {
-          const x = padding + stringIdx * stringSpacing;
+          const x = gridLeft + stringIdx * stringSpacing;
 
           if (fret === 0) {
-            // Open string - circle above nut
             return (
               <circle
                 key={`dot-${stringIdx}`}
@@ -430,7 +472,6 @@ export default function ChordDiagram({ chord, size = 140 }) {
               />
             );
           } else if (fret === -1) {
-            // Muted string - X above nut
             return (
               <g key={`mute-${stringIdx}`}>
                 <line
@@ -452,9 +493,11 @@ export default function ChordDiagram({ chord, size = 140 }) {
               </g>
             );
           } else {
-            // Fretted note - dot on fret
+            // Map fret to diagram position (shift by startFret so high chords fit)
+            const displayFret = fret - startFret + 1;
+            if (displayFret < 1 || displayFret > 4) return null;
             const y =
-              topPadding + nutHeight / 2 + (fret - 0.5) * fretSpacing;
+              topPadding + nutHeight / 2 + (displayFret - 0.5) * fretSpacing;
             return (
               <circle
                 key={`dot-${stringIdx}`}
@@ -468,26 +511,30 @@ export default function ChordDiagram({ chord, size = 140 }) {
         })}
 
         {/* Barre indicator (if applicable) */}
-        {chordData.barre && (
-          <rect
-            x={padding}
-            y={
-              topPadding +
-              nutHeight / 2 +
-              (chordData.barre - 0.5) * fretSpacing -
-              dotRadius
-            }
-            width={size - 2 * padding}
-            height={dotRadius * 2}
-            fill="#f59e0b"
-            opacity="0.3"
-            rx={dotRadius}
-          />
-        )}
+        {chordData.barre && (() => {
+          const displayBarre = chordData.barre - startFret + 1;
+          if (displayBarre < 1 || displayBarre > 4) return null;
+          return (
+            <rect
+              x={gridLeft}
+              y={
+                topPadding +
+                nutHeight / 2 +
+                (displayBarre - 0.5) * fretSpacing -
+                dotRadius
+              }
+              width={size - padding - gridLeft}
+              height={dotRadius * 2}
+              fill="#f59e0b"
+              opacity="0.3"
+              rx={dotRadius}
+            />
+          );
+        })()}
       </svg>
 
-      {/* Chord name */}
-      <p className="font-display font-bold text-center mt-2">{chord}</p>
+      {/* Chord name (use display name with # and ♭) */}
+      <p className="font-display font-bold text-center mt-2">{chordData.name}</p>
     </div>
   );
 }
