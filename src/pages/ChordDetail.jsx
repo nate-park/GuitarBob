@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import TopBar from '../components/TopBar';
 import BobWithSpeech from '../components/BobWithSpeech';
 import ChordDiagramInteractive from '../components/ChordDiagramInteractive';
 import { CHORD_DATA } from '../components/ChordDiagram';
@@ -14,7 +13,6 @@ export default function ChordDetail() {
   if (!chordData) {
     return (
       <div className="min-h-screen flex flex-col practice-space-bg">
-        <TopBar streak={1} xp={50} />
         <main className="flex-1 flex flex-col items-center justify-center px-6 py-12">
           <p className="font-body text-gray-600 mb-6">Chord not found.</p>
           <button
@@ -30,7 +28,6 @@ export default function ChordDetail() {
 
   return (
     <div className="min-h-screen flex flex-col practice-space-bg">
-      <TopBar streak={1} xp={50} />
       <main className="flex-1 px-6 py-8 max-w-2xl mx-auto w-full">
         <div className="flex flex-col items-center">
           {/* Bob says the note name when hovering */}

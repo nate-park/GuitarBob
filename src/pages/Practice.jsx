@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import TopBar from '../components/TopBar';
 import GuitarHeroFretboard from '../components/GuitarHeroFretboard';
 import PracticeVisualizer from '../components/PracticeVisualizer';
 import ChordDiagram, { CHORD_DATA } from '../components/ChordDiagram';
@@ -98,7 +97,6 @@ export default function Practice() {
 
   return (
     <div className="min-h-screen flex flex-col practice-space-bg relative">
-      <TopBar streak={1} xp={50} />
       <main className="flex-1 px-6 py-8 max-w-6xl mx-auto w-full relative z-10">
         {/* Header */}
         <div className="mb-8">
@@ -148,6 +146,7 @@ export default function Practice() {
                 lookahead={3}
                 frets={12}
               />
+              
               {/* Progress bar (notes mode) */}
               <div className="mt-6">
           <div className="bg-amber-900/30 rounded-full h-2.5 overflow-hidden border border-amber-800/40">

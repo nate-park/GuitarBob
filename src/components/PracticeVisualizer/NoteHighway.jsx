@@ -121,6 +121,45 @@ export default function NoteHighway({
       const end = t + lookahead;
       const notes = songData.notes.filter((n) => n.time >= start && n.time <= end);
 
+      // Highlight full strings for open notes that are hitting
+      for (const note of notes) {
+        if (note.fret !== 0) continue; // Only for open strings
+        const dt = note.time - t;
+        const hitDelta = Math.abs(dt);
+        const inGood = hitDelta <= HIT_GOOD;
+        
+        const key = `${note.time.toFixed(3)}-${note.string}`;
+        const hitAt = hitTimeRef.current[key];
+        const isDisappearing = hitAt != null;
+        let disappearProgress = 1;
+        const DISAPPEAR_MS = 500;
+        if (isDisappearing) {
+          const elapsed = now - hitAt;
+          if (elapsed >= DISAPPEAR_MS) continue; // fully gone, skip
+          disappearProgress = 1 - Math.pow(elapsed / DISAPPEAR_MS, 1.2); // easeOut
+        }
+        
+        if (inGood) {
+          const lane = note.string;
+          const stringY = offsetX + lane * laneWidth + laneWidth / 2;
+          const [r, g, b] = hexToRgb(STRING_COLORS[lane]);
+          
+          ctx.save();
+          ctx.globalAlpha *= disappearProgress;
+          
+          // Highlight the entire string lane
+          ctx.fillStyle = `rgba(${r},${g},${b},0.2)`;
+          ctx.fillRect(offsetX + lane * laneWidth - laneWidth * 0.35, 0, laneWidth * 0.7, highwayHeight);
+          
+          // Bright border on edges
+          ctx.strokeStyle = `rgba(${r},${g},${b},0.6)`;
+          ctx.lineWidth = 3;
+          ctx.strokeRect(offsetX + lane * laneWidth - laneWidth * 0.35, 0, laneWidth * 0.7, highwayHeight);
+          
+          ctx.restore();
+        }
+      }
+
       for (const note of notes) {
         const dt = note.time - t;
         const progress = 1 - dt / lookahead;
@@ -145,7 +184,7 @@ export default function NoteHighway({
         }
 
         // Disappear animation - skip drawing if past animation
-        const DISAPPEAR_MS = 280;
+        const DISAPPEAR_MS = 500;
         const hitAt = hitTimeRef.current[key];
         const isDisappearing = hitAt != null;
         let disappearProgress = 1;
@@ -158,7 +197,12 @@ export default function NoteHighway({
         const isInHitZone = y >= hitLineY - 25 && y <= hitLineY + 25;
         const glow = isInHitZone && inGood && !isDisappearing;
 
-        // Comet trail - long and skinny
+        // Skip visual circle rendering for open strings that are being highlighted
+        if (note.fret === 0 && isInHitZone && inGood) {
+          ctx.restore();
+          continue;
+        }
+
         const trailLen = 200;
         const trailTop = y - trailLen;
         const [r, g, b] = hexToRgb(color);
@@ -213,6 +257,31 @@ export default function NoteHighway({
         roundRect(ctx, cx - drawSize / 2, drawY - drawSize / 2, drawSize, drawSize, 8);
         ctx.fill();
         ctx.shadowBlur = 0;
+
+        // Enhanced glow halo when in hit zone
+        if (glow) {
+          ctx.save();
+          const [r, g, b] = hexToRgb(color);
+          
+          // Large outer glow
+          for (let i = 3; i > 0; i--) {
+            ctx.globalAlpha = 0.3 / i;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 4 + i * 2;
+            roundRect(ctx, cx - drawSize / 2 - i * 4, drawY - drawSize / 2 - i * 4, drawSize + i * 8, drawSize + i * 8, 8);
+            ctx.stroke();
+          }
+          
+          // Intense bloom effect
+          ctx.globalAlpha = 0.4;
+          for (let i = 0; i < 2; i++) {
+            ctx.fillStyle = `rgba(${r},${g},${b},0.15)`;
+            roundRect(ctx, cx - drawSize / 2 - 8 - i * 6, drawY - drawSize / 2 - 8 - i * 6, drawSize + 16 + i * 12, drawSize + 16 + i * 12, 12);
+            ctx.fill();
+          }
+          
+          ctx.restore();
+        }
 
         // Border
         ctx.strokeStyle = `rgba(255,255,255,${0.4 * disappearProgress})`;

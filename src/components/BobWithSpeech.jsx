@@ -13,17 +13,24 @@ export default function BobWithSpeech({
   className = '',
 }) {
   return (
-    <div className={`flex items-end gap-4 ${side === 'right' ? 'flex-row-reverse' : ''} ${className}`}>
+    <div className={`flex items-center gap-2 ${side === 'right' ? 'flex-row-reverse' : ''} ${className}`}>
       <Mascot pose={pose} size={bobSize} />
       <div
         key={message}
         className={
           side === 'right'
-            ? 'speech-bubble rounded-br-none rounded-bl-2xl'
-            : 'speech-bubble'
+            ? 'speech-bubble speech-bubble-right rounded-br-none rounded-bl-2xl'
+            : 'speech-bubble speech-bubble-left rounded-bl-none rounded-br-2xl'
         }
       >
         <p className="font-body text-lg leading-relaxed">{message}</p>
+        <div
+          className={
+            side === 'right'
+              ? 'speech-tail speech-tail-right'
+              : 'speech-tail speech-tail-left'
+          }
+        />
       </div>
     </div>
   );

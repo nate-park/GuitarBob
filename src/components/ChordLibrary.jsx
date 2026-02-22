@@ -3,6 +3,7 @@ import ChordDiagram from './ChordDiagram';
 
 export default function ChordLibrary() {
   const [filter, setFilter] = useState('all');
+  const [selectedChord, setSelectedChord] = useState(null);
 
   const categories = {
     major: ['C', 'Csharp', 'D', 'Dsharp', 'E', 'F', 'Fsharp', 'G', 'Gsharp', 'A', 'Asharp', 'B'],
@@ -64,13 +65,55 @@ export default function ChordLibrary() {
       </div>
 
       {/* Chord Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 justify-items-center">
         {chords.map((chord) => (
-          <div key={chord} className="flex flex-col items-center">
-            <ChordDiagram chord={chord} size={100} />
-          </div>
+          <button
+            key={chord}
+            onClick={() => setSelectedChord(chord)}
+            className="flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform duration-200"
+          >
+            <ChordDiagram chord={chord} size={100} compact={true} />
+          </button>
         ))}
       </div>
+
+      {/* Modal */}
+      {selectedChord && (
+        <div
+          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+          onClick={() => setSelectedChord(null)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full animate-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="font-display text-4xl text-bob-green-dark">{selectedChord}</h2>
+              <button
+                onClick={() => setSelectedChord(null)}
+                className="text-3xl text-gray-400 hover:text-gray-600 transition"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex flex-col items-center mb-8">
+              <ChordDiagram chord={selectedChord} size={300} />
+            </div>
+            <div className="bg-bob-green/10 rounded-xl p-6 mb-6">
+              <h3 className="font-display text-lg text-bob-green-dark mb-3">How to Play</h3>
+              <p className="font-body text-gray-700">
+                Press the fingering positions shown in the diagram above. Start with your lower-numbered fingers first.
+              </p>
+            </div>
+            <button
+              onClick={() => setSelectedChord(null)}
+              className="w-full bg-bob-green text-white font-display font-semibold py-3 rounded-xl hover:bg-bob-green-dark transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Info */}
       <div className="mt-12 bg-bob-blue/10 rounded-2xl p-6">

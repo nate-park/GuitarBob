@@ -2,6 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap');
+
+/* Import Lazydog font (ensure this font file is in your project) */
+@font-face {
+  font-family: 'Lazydog';
+  src: url('/fonts/Lazydog.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Theme CSS Variables */
+:root[data-theme="bob"] {
+  --color-primary: #58CC02;
+  --color-primary-dark: #46A302;
+  --color-secondary: #1CB0F6;
+  --color-accent: #FF9600;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -41,9 +59,27 @@ body {
     @apply btn-bob bg-white text-bob-green-dark border-4 border-bob-green;
   }
   .speech-bubble {
-    @apply relative bg-white rounded-2xl rounded-bl-none px-5 py-4 shadow-card
+    @apply relative bg-white rounded-2xl px-5 py-4 shadow-card
            font-body text-gray-800 text-lg border-2 border-bob-green/20;
     animation: speech-bubble-in 0.4s ease-out;
+  }
+  
+  .speech-tail {
+    @apply absolute w-0 h-0 border-solid;
+  }
+  
+  .speech-tail-left {
+    @apply -left-3 top-6;
+    border-width: 0 12px 12px 0;
+    border-color: transparent #ffffff transparent transparent;
+    filter: drop-shadow(-1px 1px 1px rgba(0, 0, 0, 0.05));
+  }
+  
+  .speech-tail-right {
+    @apply -right-3 top-6;
+    border-width: 12px 12px 0 0;
+    border-color: #ffffff transparent transparent transparent;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.05));
   }
 }
 @keyframes speech-bubble-in {

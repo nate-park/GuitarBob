@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BobWithSpeech from '../components/BobWithSpeech';
-import TopBar from '../components/TopBar';
 
 export default function Upload() {
   const navigate = useNavigate();
@@ -29,7 +28,6 @@ export default function Upload() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={0} xp={0} />
       <main className="flex-1 px-6 py-8 max-w-2xl mx-auto">
         <BobWithSpeech
           message="Drop your song here – any format works! I'll listen and get the chords and tabs ready."

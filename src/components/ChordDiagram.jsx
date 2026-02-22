@@ -346,7 +346,7 @@ const CHORD_DATA = {
 };
 
 export { CHORD_DATA };
-export default function ChordDiagram({ chord, size = 140 }) {
+export default function ChordDiagram({ chord, size = 140, compact = false }) {
   const chordData = CHORD_DATA[chord];
 
   if (!chordData) {
@@ -362,7 +362,7 @@ export default function ChordDiagram({ chord, size = 140 }) {
 
   // SVG dimensions
   const leftFretMargin = 18; // Space for fret numbers on the left
-  const padding = 10;
+  const padding = compact ? 10 : 20;
   const topPadding = 40;
   const nutHeight = 4;
   const usableWidth = size - 2 * padding - leftFretMargin;
@@ -380,12 +380,12 @@ export default function ChordDiagram({ chord, size = 140 }) {
 
   return (
     <div className="flex flex-col items-center">
-      <svg
-        width={size}
-        height={size * 1.3}
-        viewBox={`0 0 ${size} ${size * 1.3}`}
-        className="bg-white rounded-lg border-2 border-gray-300"
-      >
+      <div className={`bg-white rounded-lg border-2 border-gray-300 ${compact ? 'p-2' : 'p-6'}`}>
+        <svg
+          width={size}
+          height={size * 1.3}
+          viewBox={`0 0 ${size} ${size * 1.3}`}
+        >
         {/* Start fret label (e.g. "3fr") when chord is above fret 1 */}
         {showStartFret && (
           <text
@@ -412,7 +412,7 @@ export default function ChordDiagram({ chord, size = 140 }) {
               textAnchor="end"
               dominantBaseline="middle"
               fill="#333"
-              fontSize="11"
+              fontSize="16"
               fontWeight="600"
             >
               {fretNum}
@@ -533,6 +533,7 @@ export default function ChordDiagram({ chord, size = 140 }) {
           );
         })()}
       </svg>
+      </div>
 
       {/* Chord name (use display name with # and ♭) */}
       <p className="font-display font-bold text-center mt-2">{chordData.name}</p>

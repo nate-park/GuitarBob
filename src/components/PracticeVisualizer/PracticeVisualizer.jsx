@@ -5,7 +5,7 @@ import React, {
   useCallback,
   useLayoutEffect,
 } from 'react';
-import GuitarNeck from './GuitarNeck';
+import FretboardVisualizer from './FretboardVisualizer';
 import NoteHighway from './NoteHighway';
 
 /**
@@ -25,7 +25,6 @@ export default function PracticeVisualizer({
   const currentTimeRef = useRef(currentTime);
   const containerRef = useRef(null);
   const [width, setWidth] = useState(640);
-  const [glowCells, setGlowCells] = useState(new Map()); // 's-f' -> { quality, until }
 
   useLayoutEffect(() => {
     const el = containerRef.current;
@@ -42,51 +41,12 @@ export default function PracticeVisualizer({
     currentTimeRef.current = currentTime;
   }, [currentTime]);
 
-  const onNoteHit = useCallback((string, fret, quality) => {
-    const key = `${string}-${fret}`;
-    setGlowCells((prev) => {
-      const next = new Map(prev);
-      next.set(key, { quality, until: Date.now() + 200 });
-      return next;
-    });
-  }, []);
-
-  // Clear expired glows (minimal timer-based cleanup)
-  useEffect(() => {
-    const id = setInterval(() => {
-      const now = Date.now();
-      setGlowCells((prev) => {
-        let changed = false;
-        const next = new Map(prev);
-        for (const [k, v] of next) {
-          if (v.until < now) {
-            next.delete(k);
-            changed = true;
-          }
-        }
-        return changed ? next : prev;
-      });
-    }, 50);
-    return () => clearInterval(id);
-  }, []);
-
-  const activeGlowCells = new Map();
-  for (const [k, v] of glowCells) {
-    activeGlowCells.set(k, v.quality);
-  }
-
   const highwayHeight = 320;
   const hitLineY = 300;
 
-  // Preview cells: upcoming notes (on highway, not yet hit) - hollow outline on fretboard
-  const previewCells = new Set();
-  const notes = songData?.notes ?? [];
-  for (const n of notes) {
-    if (n.time > currentTime && n.time <= currentTime + lookahead) {
-      const key = `${n.string}-${n.fret}`;
-      if (!activeGlowCells.has(key)) previewCells.add(key);
-    }
-  }
+  const onNoteHit = useCallback((string, fret, quality) => {
+    // No-op for now since FretboardVisualizer handles its own fill logic
+  }, []);
 
   return (
     <div
@@ -119,9 +79,14 @@ export default function PracticeVisualizer({
           </div>
         </div>
 
-        {/* Horizontal fretboard */}
+        {/* Fretboard visualizer with filling circles */}
         <div className="p-2">
-          <GuitarNeck frets={frets} glowCells={activeGlowCells} previewCells={previewCells} />
+          <FretboardVisualizer 
+            currentTime={currentTime}
+            songData={songData}
+            lookahead={lookahead}
+            frets={frets}
+          />
         </div>
       </div>
 

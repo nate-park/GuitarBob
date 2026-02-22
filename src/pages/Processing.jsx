@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Mascot from '../components/Mascot';
-import TopBar from '../components/TopBar';
 
 const MESSAGES = [
   "Listening to your song...",
@@ -32,7 +31,6 @@ export default function Processing() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={0} xp={0} />
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-12">
         <Mascot pose="thinking" size={200} className="mb-8" />
         <h2 className="font-display text-2xl text-bob-green-dark mb-2">

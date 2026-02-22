@@ -3,34 +3,26 @@ import SvgImageWrapper from './SvgImageWrapper';
 
 const GIF_DURATION_MS = 2500;
 
-/** Guitar Bob logo – animates on visit/revisit, then static. */
+/** Guitar Bob logo – animates on first visit only, then remains static. */
 export default function GuitarBobLogoSvg({ width = 80, height = 40, className = '' }) {
   const [showGif, setShowGif] = useState(true);
 
   useEffect(() => {
-    let timeoutId;
+    // Check if animation has already been shown in this session
+    const hasShownAnimation = sessionStorage.getItem('guitarbob-logo-animated');
+    
+    if (hasShownAnimation) {
+      // Animation already shown, start static
+      setShowGif(false);
+    } else {
+      // First time - show animation then switch to static
+      const timeoutId = setTimeout(() => {
+        setShowGif(false);
+        sessionStorage.setItem('guitarbob-logo-animated', 'true');
+      }, GIF_DURATION_MS);
 
-    const playGifThenStatic = () => {
-      clearTimeout(timeoutId);
-      setShowGif(true);
-      timeoutId = setTimeout(() => setShowGif(false), GIF_DURATION_MS);
-    };
-
-    const onFocus = () => playGifThenStatic();
-    const onVisibility = () => {
-      if (document.visibilityState === 'visible') playGifThenStatic();
-    };
-
-    playGifThenStatic();
-
-    window.addEventListener('focus', onFocus);
-    document.addEventListener('visibilitychange', onVisibility);
-
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('focus', onFocus);
-      document.removeEventListener('visibilitychange', onVisibility);
-    };
+      return () => clearTimeout(timeoutId);
+    }
   }, []);
 
   const href = showGif ? '/GUitar.gif' : '/guitar-bob-logo.png';

@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useCharacter } from '../context/CharacterContext';
 import { CHARACTERS } from '../context/CharacterContext';
 import Mascot from '../components/Mascot';
-import TopBar from '../components/TopBar';
 
 const GUITAR_STRINGS = [
   { note: 'E', label: 'Low E' },
@@ -84,7 +83,6 @@ export default function Tuner() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <TopBar streak={0} xp={0} />
       <main className="flex-1 px-6 py-8 max-w-2xl mx-auto w-full">
         <h1 className="font-display text-2xl sm:text-3xl text-bob-green-dark text-center mb-2">
           🎸 Tuner
