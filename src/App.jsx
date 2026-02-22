@@ -10,6 +10,7 @@ import Chords from './pages/Chords';
 import ChordDetail from './pages/ChordDetail';
 import CharacterShop from './pages/CharacterShop';
 import Tuner from './pages/Tuner';
+import LiveTranscribe from './pages/LiveTranscribe';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/processing" element={<Processing />} />
           <Route path="/results" element={<Results />} />
           <Route path="/practice" element={<Practice />} />
+          <Route path="/transcribe" element={<LiveTranscribe />} />
           <Route path="/chord/:chordKey" element={<ChordDetail />} />
           <Route path="/visualizer" element={<Navigate to="/practice" replace />} />
         </Routes>

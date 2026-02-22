@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BobWithSpeech from '../components/BobWithSpeech';
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000';
+
 export default function Upload() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [dragOver, setDragOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -21,9 +25,28 @@ export default function Upload() {
     if (f) setFile(f);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!file) return;
-    navigate('/processing', { state: { file: file.name } });
+    setUploading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch(`${API_BASE}/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `Upload failed (${res.status})`);
+      }
+      const { job_id } = await res.json();
+      navigate('/processing', { state: { job_id, fileName: file.name } });
+    } catch (e) {
+      setError(e.message || 'Upload failed');
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -58,13 +81,16 @@ export default function Upload() {
             <span className="font-body text-gray-500">MP3, WAV, M4A, OGG</span>
           </label>
         </div>
+        {error && (
+          <p className="mt-4 font-body text-red-600 text-sm">{error}</p>
+        )}
         <div className="mt-8 flex gap-4">
           <button
             onClick={handleSubmit}
-            disabled={!file}
-            className={`btn-bob-green flex-1 ${!file ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={!file || uploading}
+            className={`btn-bob-green flex-1 ${!file || uploading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
-            Let Bob listen!
+            {uploading ? 'Uploading…' : 'Let Bob listen!'}
           </button>
           <button
             onClick={() => navigate('/')}

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import GuitarHeroFretboard from '../components/GuitarHeroFretboard';
 import PracticeVisualizer from '../components/PracticeVisualizer';
+import LiveDetectedNotes, { useLiveGuitar } from '../components/LiveDetectedNotes';
 import ChordDiagram, { CHORD_DATA } from '../components/ChordDiagram';
 import { MOCK_SONG } from '../data/mockSongData';
 import { PRACTICE_SONG } from '../data/practiceVisualizerSong';
@@ -10,80 +11,138 @@ export default function Practice() {
   const navigate = useNavigate();
   const location = useLocation();
   const [visualizerMode, setVisualizerMode] = useState('notes'); // 'notes' | 'chords'
+  const { notes, isConnected, error, connect, disconnect } = useLiveGuitar();
+
+  // Use songData from Results (uploaded song) or fallback to mock
+  const songDataFromUpload = location.state?.songData;
+  const audioUrl = location.state?.audioUrl;
+  const NOTES_SONG = songDataFromUpload ?? PRACTICE_SONG;
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
+  const audioRef = useRef(null);
   const intervalRef = useRef(null);
   const lastTickRef = useRef(0);
 
   const SPEEDS = [0.25, 0.5, 0.75, 1];
-  const SONG = visualizerMode === 'notes' ? PRACTICE_SONG : MOCK_SONG;
-  const songDuration = visualizerMode === 'notes' ? SONG.durationMs : SONG.duration;
+  const SONG = visualizerMode === 'notes' ? NOTES_SONG : MOCK_SONG;
+  const songDuration = visualizerMode === 'notes'
+    ? (SONG.durationMs ?? SONG.duration * 1000)
+    : SONG.duration;
 
-  // Tick interval in ms - how often we update the slider
   const TICK_MS = 50;
+  const useAudio = audioUrl && visualizerMode === 'notes';
 
-  // setInterval-based playback: each tick advances (TICK_MS * speed) ms of song time
+  // When using real audio: sync state from audio element
   useEffect(() => {
-    // Always clear any existing interval first (prevents double intervals when deps change)
+    if (!useAudio || !audioRef.current) return;
+    const audio = audioRef.current;
+    const onTimeUpdate = () => setCurrentTime(audio.currentTime * 1000);
+    const onPlay = () => setIsPlaying(true);
+    const onPause = () => setIsPlaying(false);
+    const onEnded = () => setIsPlaying(false);
+    audio.addEventListener('timeupdate', onTimeUpdate);
+    audio.addEventListener('play', onPlay);
+    audio.addEventListener('pause', onPause);
+    audio.addEventListener('ended', onEnded);
+    return () => {
+      audio.removeEventListener('timeupdate', onTimeUpdate);
+      audio.removeEventListener('play', onPlay);
+      audio.removeEventListener('pause', onPause);
+      audio.removeEventListener('ended', onEnded);
+    };
+  }, [useAudio]);
+
+  // When using real audio: try to auto-start when ready (browsers may block autoplay)
+  useEffect(() => {
+    if (!useAudio || !audioRef.current || !songDataFromUpload) return;
+    const audio = audioRef.current;
+    const tryPlay = () => {
+      audio.playbackRate = playbackSpeed;
+      audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    };
+    if (audio.readyState >= 2) tryPlay();
+    else audio.addEventListener('canplay', tryPlay, { once: true });
+    return () => audio.removeEventListener('canplay', tryPlay);
+  }, [useAudio, songDataFromUpload, playbackSpeed]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // When using mock (no audio): setInterval-based playback
+  useEffect(() => {
+    if (useAudio) return;
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
-
     if (isPlaying) {
       lastTickRef.current = Date.now();
-
       const tick = () => {
         const now = Date.now();
         const realElapsed = now - lastTickRef.current;
         lastTickRef.current = now;
-        const advance = realElapsed * playbackSpeed; // ms of song to advance
-
+        const advance = realElapsed * playbackSpeed;
         let reachedEnd = false;
         setCurrentTime((prev) => {
           const next = Math.min(prev + advance, songDuration);
-          if (next >= songDuration) {
-            reachedEnd = true;
-          }
+          if (next >= songDuration) reachedEnd = true;
           return next;
         });
-
         if (reachedEnd) {
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
+          if (intervalRef.current) clearInterval(intervalRef.current);
           setIsPlaying(false);
         }
       };
-
       intervalRef.current = setInterval(tick, TICK_MS);
     }
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [isPlaying, playbackSpeed, songDuration]);
+  }, [useAudio, isPlaying, playbackSpeed, songDuration]);
+
+  // Apply playback rate to audio element
+  useEffect(() => {
+    if (audioRef.current) audioRef.current.playbackRate = playbackSpeed;
+  }, [playbackSpeed]);
 
   const handlePlayPause = () => {
-    setIsPlaying((p) => !p);
+    if (useAudio && audioRef.current) {
+      const audio = audioRef.current;
+      if (audio.paused) {
+        audio.play().then(() => setIsPlaying(true)).catch(() => {});
+      } else {
+        audio.pause();
+        setIsPlaying(false);
+      }
+    } else {
+      setIsPlaying((p) => !p);
+    }
   };
 
   const handleStop = () => {
+    if (useAudio && audioRef.current) {
+      const audio = audioRef.current;
+      audio.pause();
+      audio.currentTime = 0;
+    }
     setIsPlaying(false);
     setCurrentTime(0);
   };
 
   const handleReplay = () => {
-    setCurrentTime(0);
-    setIsPlaying(true);
+    if (useAudio && audioRef.current) {
+      const audio = audioRef.current;
+      audio.currentTime = 0;
+      audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    } else {
+      setCurrentTime(0);
+      setIsPlaying(true);
+    }
   };
 
   const handleSeek = (time) => {
-    if (!isPlaying) {
+    if (useAudio && audioRef.current) {
+      audioRef.current.currentTime = time / 1000;
+      if (isPlaying) audioRef.current.play();
+    } else if (!isPlaying) {
       setCurrentTime(time);
     }
   };
@@ -136,16 +195,46 @@ export default function Practice() {
           </button>
         </div>
 
+        {/* Hidden audio element for uploaded song playback */}
+        {audioUrl && visualizerMode === 'notes' && (
+          <audio
+            ref={audioRef}
+            src={audioUrl}
+            preload="auto"
+            onError={(e) => console.warn('Audio load failed:', e.target?.error)}
+          />
+        )}
+
         {/* Visualizer */}
         <div className="mt-4">
           {visualizerMode === 'notes' ? (
             <>
-              <PracticeVisualizer
-                currentTime={currentTime / 1000}
-                songData={PRACTICE_SONG}
-                lookahead={3}
-                frets={12}
-              />
+              <div className="flex flex-col lg:flex-row gap-4">
+                <div className="flex-1 min-w-0">
+                  <PracticeVisualizer
+                    currentTime={currentTime / 1000}
+                    songData={NOTES_SONG}
+                    lookahead={3}
+                    frets={12}
+                  />
+                </div>
+                <div className="w-full lg:w-72 shrink-0">
+                  <div className="mb-2 flex justify-between items-center">
+                    <span className="font-body text-sm text-amber-900">Compare with your guitar</span>
+                    <button
+                      onClick={isConnected ? disconnect : connect}
+                      className={`px-4 py-2 rounded-xl font-display font-semibold text-sm transition ${
+                        isConnected
+                          ? 'bg-red-500/80 text-white hover:bg-red-600'
+                          : 'bg-bob-green text-white hover:bg-bob-green-dark'
+                      }`}
+                    >
+                      {isConnected ? 'Stop listening' : 'Listen'}
+                    </button>
+                  </div>
+                  <LiveDetectedNotes notes={notes} isConnected={isConnected} error={error} />
+                </div>
+              </div>
               
               {/* Progress bar (notes mode) */}
               <div className="mt-6">

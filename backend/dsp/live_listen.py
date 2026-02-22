@@ -1,9 +1,28 @@
 # backend/dsp/live_listen.py
 import asyncio
+import os
 import numpy as np
 import sounddevice as sd
 import time
 import librosa
+
+
+def _get_input_device():
+    """Use Scarlett if available, else default. Set SCARLETT_DEVICE=index to force."""
+    idx = os.environ.get("SCARLETT_DEVICE")
+    if idx is not None:
+        try:
+            return int(idx)
+        except ValueError:
+            pass
+    # Prefer Scarlett by name
+    devices = sd.query_devices(kind="input")
+    for i, d in enumerate(devices):
+        name = str(d.get("name", "")).lower()
+        if "scarlett" in name or "focusrite" in name:
+            return i
+    return None  # system default
+
 
 def hz_to_note_name(hz: float):
     if hz is None or hz <= 0 or np.isnan(hz):
@@ -12,7 +31,7 @@ def hz_to_note_name(hz: float):
     return librosa.midi_to_note(int(round(midi)))
 
 async def stream_live_guitar_events(
-    device=None,          # set this to your interface index (e.g., 1)
+    device=None,          # None = auto-detect Scarlett or default
     channels: int = 2,    # Scarlett 2i2 typically has 2 input channels
     sr: int | None = None,
     hop_size: int = 1024,
@@ -21,6 +40,8 @@ async def stream_live_guitar_events(
     loop = asyncio.get_event_loop()
     q: asyncio.Queue[np.ndarray] = asyncio.Queue()
 
+    if device is None:
+        device = _get_input_device()
     if sr is None:
         try:
             sr = int(sd.query_devices(device)["default_samplerate"])
@@ -66,7 +87,7 @@ async def stream_live_guitar_events(
             energy = float(np.sqrt(np.mean(buf**2)) + 1e-12)
 
             # gate silence: prevents fake “B5 @ 1000Hz” when input is basically silent
-            if energy < 1e-5:
+            if energy < 1e-6:
                 now = time.time()
                 if now - last_send > 0.05:
                     yield {

@@ -3,6 +3,7 @@ Generate note_highway and chord tabs from chord analysis (no basic-pitch).
 Chord shapes match frontend GuitarHeroFretboard CHORD_SHAPES.
 [lowE, A, D, G, B, highE]; -1 = muted, 0 = open, >0 = fretted
 """
+from __future__ import annotations
 
 # Chord shapes: [string0, 1, 2, 3, 4, 5] = [lowE, A, D, G, B, highE]
 CHORD_SHAPES = {

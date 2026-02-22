@@ -176,6 +176,12 @@ export default function Home() {
           >
             Chord Library
           </Link>
+          <Link
+            to="/transcribe"
+            className="btn-bob-outline flex-1 text-center no-underline py-4"
+          >
+            Live Transcribe
+          </Link>
         </div>
         <p className="font-body text-sm text-gray-500 mt-8 text-center">
           {dialogue.cta}

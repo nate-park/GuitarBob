@@ -1,7 +1,10 @@
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from __future__ import annotations
+
+from fastapi import FastAPI, UploadFile, File, HTTPException, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
+from typing import Optional
 from uuid import uuid4
 from pathlib import Path
 import asyncio
@@ -23,8 +26,9 @@ PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 # --- app ---
 app = FastAPI()
 
-# Serve uploaded audio so frontend can do: /uploads/<jobid>_<originalname>
+# Serve uploaded audio and processed WAV (use WAV for playback – times match note_highway)
 app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
+app.mount("/processed", StaticFiles(directory=str(PROCESSED_DIR)), name="processed")
 
 # --- CORS ---
 app.add_middleware(
@@ -47,8 +51,8 @@ class UploadResponse(BaseModel):
 class JobStatus(BaseModel):
     job_id: str
     status: str   # "processing" | "done" | "error"
-    result: dict | None = None
-    error: str | None = None
+    result: Optional[dict] = None
+    error: Optional[str] = None
 
 
 def _basic_pitch_available() -> bool:
@@ -61,6 +65,52 @@ def _basic_pitch_available() -> bool:
         return True
     except Exception:
         return False
+
+
+@app.get("/")
+def root():
+    return {
+        "message": "GuitarBob API",
+        "docs": "/docs",
+        "health": "/health",
+        "upload": "POST /upload",
+        "jobs": "GET /jobs/{job_id}",
+    }
+
+
+@app.websocket("/ws/live")
+async def websocket_live(websocket: WebSocket):
+    """Stream live guitar pitch/note events from Scarlett (CoreAudio) to the frontend."""
+    await websocket.accept()
+    try:
+        from dsp.live_listen import stream_live_guitar_events
+
+        async for event in stream_live_guitar_events():
+            await websocket.send_json(event)
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        try:
+            await websocket.close()
+        except Exception:
+            pass
+
+
+@app.get("/devices")
+def list_devices():
+    """List audio input devices. Set SCARLETT_DEVICE=<index> to force one."""
+    import sounddevice as sd
+
+    devices = sd.query_devices(kind="input")
+    out = []
+    for i, d in enumerate(devices):
+        out.append({
+            "index": i,
+            "name": str(d.get("name", "?")),
+            "channels": int(d.get("max_input_channels", 0)),
+            "sr": float(d.get("default_samplerate", 0)),
+        })
+    return {"inputs": out}
 
 
 @app.get("/health")
