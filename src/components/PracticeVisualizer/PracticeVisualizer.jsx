@@ -80,18 +80,18 @@ export default function PracticeVisualizer({
 
   return (
     <div
-      className={`bg-white rounded-2xl p-4 shadow-card border-2 border-gray-200 overflow-hidden ${className}`}
+      className={`practice-card rounded-2xl p-4 overflow-hidden relative ${className}`}
     >
       <div className="flex justify-between items-center mb-3">
-        <h3 className="font-display text-lg text-gray-800">Note Highway</h3>
-        <span className="font-body text-sm text-gray-500">
+        <h3 className="font-display text-lg text-amber-900">Note Highway</h3>
+        <span className="font-body text-sm text-amber-800">
           {currentTime.toFixed(2)}s / {songData.duration ?? 0}s
         </span>
       </div>
 
       <div
         ref={containerRef}
-        className="rounded-xl overflow-hidden bg-gray-100 border border-gray-200"
+        className="rounded-xl overflow-hidden practice-visualizer-inner relative"
       >
         {/* Falling notes - Canvas */}
         <NoteHighway
@@ -111,7 +111,7 @@ export default function PracticeVisualizer({
         </div>
       </div>
 
-      <p className="mt-2 text-center text-xs text-gray-500 font-body">
+      <p className="mt-2 text-center text-xs text-amber-800 font-body">
         Notes fall from top → hit line → align to fret on neck
       </p>
     </div>

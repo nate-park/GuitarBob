@@ -88,13 +88,13 @@ export default function Practice() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen flex flex-col practice-space-bg relative">
       <TopBar streak={1} xp={50} />
-      <main className="flex-1 px-6 py-8 max-w-4xl mx-auto w-full">
+      <main className="flex-1 px-6 py-8 max-w-6xl mx-auto w-full relative z-10">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="font-display text-4xl text-bob-green-dark mb-2">Practice Mode</h1>
-          <p className="font-body text-gray-600">
+          <h1 className="font-display text-4xl practice-header-text mb-2">Practice Mode</h1>
+          <p className="font-body practice-subtext">
             Play along with the chord progression
           </p>
         </div>
@@ -106,10 +106,10 @@ export default function Practice() {
               setVisualizerMode('notes');
               setCurrentTime(0);
             }}
-            className={`px-4 py-2 rounded-lg font-display font-semibold text-sm transition ${
+            className={`px-4 py-2 rounded-xl font-display font-semibold text-sm transition practice-btn ${
               visualizerMode === 'notes'
-                ? 'bg-bob-blue text-white shadow-md'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-amber-400 text-amber-950 practice-btn-active'
+                : 'bg-amber-100/90 text-amber-900 hover:bg-amber-200/90'
             }`}
           >
             Note Highway
@@ -119,10 +119,10 @@ export default function Practice() {
               setVisualizerMode('chords');
               setCurrentTime(0);
             }}
-            className={`px-4 py-2 rounded-lg font-display font-semibold text-sm transition ${
+            className={`px-4 py-2 rounded-xl font-display font-semibold text-sm transition practice-btn ${
               visualizerMode === 'chords'
-                ? 'bg-bob-blue text-white shadow-md'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-amber-400 text-amber-950 practice-btn-active'
+                : 'bg-amber-100/90 text-amber-900 hover:bg-amber-200/90'
             }`}
           >
             Chord Mode
@@ -152,9 +152,9 @@ export default function Practice() {
 
         {/* Progress bar (keeps slider in sync) */}
         <div className="mt-6">
-          <div className="bg-gray-200 rounded-full h-2 overflow-hidden shadow">
+          <div className="bg-amber-900/30 rounded-full h-2.5 overflow-hidden border border-amber-800/40">
             <div
-              className="h-full bg-gradient-to-r from-bob-green to-bob-blue"
+              className="h-full bg-gradient-to-r from-amber-400 to-amber-300 rounded-full"
               style={{
                 width: `${songDuration ? (currentTime / songDuration) * 100 : 0}%`,
               }}
@@ -163,19 +163,19 @@ export default function Practice() {
         </div>
 
         {/* Audio Controls */}
-        <div className="mt-8 bg-white rounded-3xl p-6 shadow-lg">
+        <div className="mt-8 practice-card rounded-3xl p-6 relative overflow-hidden">
           <div className="flex flex-wrap gap-4 justify-center items-center">
             {/* Speed controls - always visible */}
             <div className="flex items-center gap-2">
-              <span className="font-body text-sm font-semibold text-gray-700">Speed:</span>
+              <span className="font-body text-sm font-semibold text-amber-900">Speed:</span>
               {SPEEDS.map((speed) => (
                 <button
                   key={speed}
                   onClick={() => setPlaybackSpeed(speed)}
-                  className={`px-3 py-2 rounded-lg font-display font-semibold text-sm transition ${
+                  className={`px-3 py-2 rounded-xl font-display font-semibold text-sm transition practice-btn ${
                     playbackSpeed === speed
-                      ? 'bg-bob-green text-white shadow-md'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-amber-400 text-amber-950 practice-btn-active'
+                      : 'bg-amber-100 text-amber-900 hover:bg-amber-200 border border-amber-800/30'
                   }`}
                 >
                   {speed}x
@@ -184,19 +184,19 @@ export default function Practice() {
             </div>
             <button
               onClick={handlePlayPause}
-              className="px-8 py-3 bg-bob-green text-white rounded-full font-display font-semibold hover:bg-bob-green/90 transition shadow-lg"
+              className="px-8 py-3 bg-amber-500 text-amber-950 rounded-2xl font-display font-semibold hover:bg-amber-400 transition practice-btn border-2 border-amber-700/50"
             >
               {isPlaying ? '⏸ Pause' : '▶ Play'}
             </button>
             <button
               onClick={handleStop}
-              className="px-8 py-3 bg-gray-400 text-white rounded-full font-display font-semibold hover:bg-gray-500 transition shadow-lg"
+              className="px-8 py-3 bg-amber-800/80 text-amber-100 rounded-2xl font-display font-semibold hover:bg-amber-800 transition practice-btn border-2 border-amber-900/50"
             >
               ■ Stop
             </button>
             <button
               onClick={handleReplay}
-              className="px-8 py-3 bg-bob-blue text-white rounded-full font-display font-semibold hover:bg-bob-blue/90 transition shadow-lg"
+              className="px-8 py-3 bg-amber-400 text-amber-950 rounded-2xl font-display font-semibold hover:bg-amber-300 transition practice-btn border-2 border-amber-600/50"
             >
               ↻ Replay
             </button>
@@ -204,7 +204,7 @@ export default function Practice() {
 
           {/* Seek Position */}
           <div className="text-center mt-6">
-            <p className="font-body text-sm text-gray-600 mb-2">Seek Position</p>
+            <p className="font-body text-sm text-amber-900 mb-2">Seek Position</p>
             <input
               type="range"
               min="0"
@@ -216,7 +216,7 @@ export default function Practice() {
               }}
               className="w-full max-w-xs"
             />
-            <p className="font-body text-xs text-gray-500 mt-2">
+            <p className="font-body text-xs text-amber-800 mt-2">
               {(currentTime / 1000).toFixed(1)}s / {(songDuration / 1000).toFixed(1)}s
             </p>
           </div>
@@ -225,7 +225,7 @@ export default function Practice() {
         {/* Back button */}
         <button
           onClick={() => navigate('/')}
-          className="font-body text-gray-500 hover:text-gray-700 mt-8 block mx-auto"
+          className="font-body text-amber-200 hover:text-amber-100 mt-8 block mx-auto transition"
         >
           ← Back to Home
         </button>

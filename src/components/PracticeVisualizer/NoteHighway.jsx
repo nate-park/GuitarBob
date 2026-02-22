@@ -48,14 +48,46 @@ export default function NoteHighway({
       const t = currentTimeRef?.current ?? 0;
       ctx.clearRect(0, 0, width, highwayHeight);
 
-      // Lane dividers
-      ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-      ctx.lineWidth = 1;
-      for (let i = 1; i < 6; i++) {
-        ctx.beginPath();
-        ctx.moveTo(i * laneWidth, 0);
-        ctx.lineTo(i * laneWidth, highwayHeight);
-        ctx.stroke();
+      // Fretboard wood background
+      const woodGrad = ctx.createLinearGradient(0, 0, width, 0);
+      woodGrad.addColorStop(0, '#2a1e14');
+      woodGrad.addColorStop(0.2, '#422f22');
+      woodGrad.addColorStop(0.5, '#4d3828');
+      woodGrad.addColorStop(0.8, '#422f22');
+      woodGrad.addColorStop(1, '#35271b');
+      ctx.fillStyle = woodGrad;
+      ctx.fillRect(0, 0, width, highwayHeight);
+      // Wood grain overlay
+      ctx.fillStyle = 'rgba(0,0,0,0.08)';
+      for (let i = 0; i < width; i += 4) {
+        ctx.fillRect(i, 0, 1, highwayHeight);
+      }
+
+      // Six guitar strings - metallic, varying thickness (low E thick → high e thin)
+      const stringThickness = [2.5, 2.2, 2, 1.8, 1.5, 1.2];
+      for (let s = 0; s < 6; s++) {
+        const cx = s * laneWidth + laneWidth / 2;
+        const halfT = stringThickness[s] / 2;
+        const grad = ctx.createLinearGradient(cx - halfT, 0, cx + halfT, 0);
+        grad.addColorStop(0, '#404040');
+        grad.addColorStop(0.3, '#888');
+        grad.addColorStop(0.5, '#e8e8e8');
+        grad.addColorStop(0.7, '#b0b0b0');
+        grad.addColorStop(1, '#505050');
+        ctx.fillStyle = grad;
+        ctx.fillRect(cx - halfT, 0, stringThickness[s], highwayHeight);
+        ctx.fillStyle = 'rgba(255,255,255,0.25)';
+        ctx.fillRect(cx - halfT, 0, Math.max(1, stringThickness[s] * 0.3), highwayHeight);
+      }
+
+      // String labels (E A D G B e) - one per lane
+      const STRING_NAMES = ['E', 'A', 'D', 'G', 'B', 'e'];
+      ctx.font = 'bold 11px Nunito, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(255,220,180,0.9)';
+      for (let s = 0; s < 6; s++) {
+        ctx.fillText(STRING_NAMES[s], s * laneWidth + 8, highwayHeight / 2);
       }
 
       // Hit zone band
