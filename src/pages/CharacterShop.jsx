@@ -71,7 +71,7 @@ export default function CharacterShop() {
                     </div>
                   )}
                   {MascotComponent && (
-                    <MascotComponent pose="default" size={100} className="mb-3" />
+                    <MascotComponent pose="default" size={240} className="mb-3" />
                   )}
                   <span className="font-display font-semibold text-gray-800 text-lg">{c.name}</span>
                   <span className="text-2xl mt-1">{c.emoji}</span>

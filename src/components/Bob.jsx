@@ -1,9 +1,7 @@
 import React from 'react';
+import SvgImageWrapper from './SvgImageWrapper';
 
-/**
- * Bob – cute guitar buddy avatar.
- * Uses custom illustrated avatar; pose affects animation.
- */
+/** Bob – cute guitar buddy avatar. Wrapped in SVG for clean scaling. */
 const POSE_ANIMATIONS = {
   default: 'animate-bounce-soft',
   happy: 'animate-bounce-soft',
@@ -17,13 +15,13 @@ export default function Bob({ pose = 'default', size = 200, className = '' }) {
   const animation = POSE_ANIMATIONS[pose] || POSE_ANIMATIONS.default;
 
   return (
-    <img
-      src="/avatar.png"
-      alt="GuitarBob"
+    <SvgImageWrapper
+      href="/avatar.gif"
       width={size}
       height={size}
-      className={`inline-block object-contain ${animation} ${className}`}
-      aria-hidden
+      className={`${animation} ${className}`}
+      rounded={size * 0.25}
+      preserveAspectRatio="xMidYMid meet"
     />
   );
 }

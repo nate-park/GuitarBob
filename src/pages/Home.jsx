@@ -4,6 +4,7 @@ import { useCharacter } from '../context/CharacterContext';
 import { CHARACTERS } from '../context/CharacterContext';
 import BobWithSpeech from '../components/BobWithSpeech';
 import TopBar from '../components/TopBar';
+import GuitarIconSvg from '../components/GuitarIconSvg';
 
 export default function Home() {
   const { characterId } = useCharacter();
@@ -14,7 +15,7 @@ export default function Home() {
       <TopBar streak={0} xp={0} />
       <main className="flex-1 flex flex-col items-center justify-center px-6 py-12 max-w-2xl mx-auto">
         <div className="flex justify-center mb-4">
-          <span className="text-5xl animate-bounce-soft inline-block">🎸</span>
+          <GuitarIconSvg width={112} height={128} className="animate-bounce-soft" />
         </div>
         <h1 className="font-display text-4xl md:text-5xl text-bob-green-dark text-center mb-2">
           Hey there, rockstar!
@@ -25,7 +26,7 @@ export default function Home() {
         <BobWithSpeech
           message="Upload any song and I'll figure out the chords and tabs for you. Then we'll practice together, step by step. Ready?"
           pose="default"
-          bobSize={180}
+          bobSize={240}
         />
         <div className="mt-12 flex flex-col sm:flex-row gap-4 w-full max-w-sm">
           <Link

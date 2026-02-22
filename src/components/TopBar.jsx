@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useCharacter, CHARACTERS } from '../context/CharacterContext';
 import Mascot from './Mascot';
+import GuitarBobLogoSvg from './GuitarBobLogoSvg';
 
 export default function TopBar({ streak = 0 }) {
   const { characterId, xp } = useCharacter();
@@ -10,9 +11,8 @@ export default function TopBar({ streak = 0 }) {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b-4 border-bob-green shadow-card relative">
       <div className="max-w-4xl mx-auto px-3 py-2 sm:py-2.5 flex items-center gap-2 min-h-[52px]">
-        <Link to="/" className="flex items-center gap-1.5 min-w-0 shrink-0 no-underline flex-1 justify-start">
-          <span className="font-display text-lg sm:text-2xl text-bob-green-dark truncate">GuitarBob</span>
-          <span className="text-lg sm:text-2xl shrink-0">🎸</span>
+        <Link to="/" className="flex items-center min-w-0 shrink-0 no-underline flex-1 justify-start" aria-label="GuitarBob home">
+          <GuitarBobLogoSvg width={160} height={48} className="shrink-0" />
         </Link>
         <Link
           to="/shop"
