@@ -53,10 +53,10 @@ export default function ChordTimeline({
         </p>
       </div>
 
-      {/* Timeline progress bar */}
+      {/* Timeline progress bar - no transition so it stays in sync with slider */}
       <div className="bg-gray-200 rounded-full h-3 overflow-hidden shadow-md">
         <div
-          className="h-full bg-gradient-to-r from-bob-green to-bob-blue transition-all duration-100"
+          className="h-full bg-gradient-to-r from-bob-green to-bob-blue"
           style={{ width: `${(currentTime / total) * 100}%` }}
         />
       </div>

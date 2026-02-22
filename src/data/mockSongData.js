@@ -1,18 +1,21 @@
 // Mock song data for testing the chord tracker
+// All times in milliseconds; 1 second = 1000ms
+const SEC = 1000;
+
 export const MOCK_SONG = {
   title: "Basic Practice Progression",
   artist: "Guitar Bob",
-  duration: 20000, // 20 seconds
-  tempo: 120,
+  duration: 60 * SEC, // 60 seconds (1 minute)
+  tempo: 80,
   chords: [
-    { time: 0, chord: "C", duration: 2500 },
-    { time: 2500, chord: "C", duration: 2500 },
-    { time: 5000, chord: "G", duration: 2500 },
-    { time: 7500, chord: "G", duration: 2500 },
-    { time: 10000, chord: "Am", duration: 2500 },
-    { time: 12500, chord: "Am", duration: 2500 },
-    { time: 15000, chord: "F", duration: 2500 },
-    { time: 17500, chord: "F", duration: 2500 },
+    { time: 0 * SEC, chord: "C", duration: 7.5 * SEC },
+    { time: 7.5 * SEC, chord: "C", duration: 7.5 * SEC },
+    { time: 15 * SEC, chord: "G", duration: 7.5 * SEC },
+    { time: 22.5 * SEC, chord: "G", duration: 7.5 * SEC },
+    { time: 30 * SEC, chord: "Am", duration: 7.5 * SEC },
+    { time: 37.5 * SEC, chord: "Am", duration: 7.5 * SEC },
+    { time: 45 * SEC, chord: "F", duration: 7.5 * SEC },
+    { time: 52.5 * SEC, chord: "F", duration: 7.5 * SEC },
   ],
 };
 

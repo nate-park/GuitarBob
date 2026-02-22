@@ -13,21 +13,24 @@ export default function Practice() {
   const rafRef = useRef(null);
   const playStartTimeRef = useRef(null);
   const pausedTimeRef = useRef(0);
+  const playbackSpeedRef = useRef(playbackSpeed);
+  playbackSpeedRef.current = playbackSpeed;
 
   const SPEEDS = [0.25, 0.5, 0.75, 1];
 
-  // Use RAF for smooth time updates with a timer (scaled by playback speed)
+  // Use RAF for smooth time updates (scaled by playback speed)
+  // playbackSpeedRef ensures the loop always reads latest speed (avoids stale closure)
   useEffect(() => {
     if (isPlaying) {
       playStartTimeRef.current = Date.now();
-      
+
       const updateTime = () => {
         const realElapsed = Date.now() - playStartTimeRef.current;
-        const elapsed = pausedTimeRef.current + realElapsed * playbackSpeed;
+        const speed = playbackSpeedRef.current;
+        const elapsed = pausedTimeRef.current + realElapsed * speed;
         pausedTimeRef.current = elapsed;
         setCurrentTime(elapsed);
-        
-        // Stop at end of song
+
         if (elapsed >= MOCK_SONG.duration) {
           setIsPlaying(false);
           pausedTimeRef.current = MOCK_SONG.duration;
