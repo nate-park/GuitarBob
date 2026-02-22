@@ -100,24 +100,24 @@ export default function Practice() {
 
         {/* Audio Controls */}
         <div className="mt-8 bg-white rounded-3xl p-6 shadow-lg">
-          {/* Playback speed */}
-          <div className="flex gap-2 justify-center mb-4 flex-wrap">
-            <span className="font-body text-sm text-gray-600 self-center mr-2">Speed:</span>
-            {SPEEDS.map((speed) => (
-              <button
-                key={speed}
-                onClick={() => setPlaybackSpeed(speed)}
-                className={`px-4 py-2 rounded-full font-display font-semibold transition ${
-                  playbackSpeed === speed
-                    ? 'bg-bob-green text-white shadow-md'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                {speed}x
-              </button>
-            ))}
-          </div>
-          <div className="flex gap-4 justify-center">
+          <div className="flex flex-wrap gap-4 justify-center items-center">
+            {/* Speed controls - always visible */}
+            <div className="flex items-center gap-2">
+              <span className="font-body text-sm font-semibold text-gray-700">Speed:</span>
+              {SPEEDS.map((speed) => (
+                <button
+                  key={speed}
+                  onClick={() => setPlaybackSpeed(speed)}
+                  className={`px-3 py-2 rounded-lg font-display font-semibold text-sm transition ${
+                    playbackSpeed === speed
+                      ? 'bg-bob-green text-white shadow-md'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                  }`}
+                >
+                  {speed}x
+                </button>
+              ))}
+            </div>
             <button
               onClick={handlePlayPause}
               className="px-8 py-3 bg-bob-green text-white rounded-full font-display font-semibold hover:bg-bob-green/90 transition shadow-lg"
