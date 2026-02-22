@@ -5,11 +5,13 @@ const STRINGS = ['E', 'A', 'D', 'G', 'B', 'e'];
 /**
  * GuitarNeck - Static horizontal fretboard
  * 6 strings (rows), N frets (columns)
- * glowCells: Map<string, 'perfect'|'good'> | Set<string> - "s-f" keys (e.g. "2-3" = string 2, fret 3)
+ * glowCells: Map<string, 'perfect'|'good'> - filled when note hits
+ * previewCells: Set<string> - hollow outline for upcoming notes
  */
 export default function GuitarNeck({
   frets = 12,
   glowCells = new Map(),
+  previewCells = new Set(),
   className = '',
 }) {
   const cols = frets + 1; // 0..frets (nut + frets)
@@ -44,6 +46,7 @@ export default function GuitarNeck({
                 const key = `${s}-${f}`;
                 const quality = glowCells.get?.(key);
                 const isGlow = !!quality;
+                const isPreview = !isGlow && previewCells.has?.(key);
                 const bg = isGlow
                   ? quality === 'perfect'
                     ? 'bg-emerald-500/80'
@@ -54,6 +57,10 @@ export default function GuitarNeck({
                     key={f}
                     className={`py-0.5 border-b border-r border-amber-700/40 transition-colors duration-75 ${bg} ${
                       isGlow ? 'shadow-[inset_0_0_12px_rgba(255,255,255,0.5)]' : ''
+                    } ${
+                      isPreview
+                        ? 'ring-2 ring-amber-400/95 ring-inset'
+                        : ''
                     }`}
                   />
                 );

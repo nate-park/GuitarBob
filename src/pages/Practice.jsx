@@ -225,7 +225,7 @@ export default function Practice() {
         {/* Back button */}
         <button
           onClick={() => navigate('/')}
-          className="font-body text-amber-200 hover:text-amber-100 mt-8 block mx-auto transition"
+          className="font-body text-amber-200 hover:text-amber-100 mt-8 block mx-auto transition btn-jiggle"
         >
           ← Back to Home
         </button>

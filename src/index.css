@@ -14,12 +14,25 @@ body {
   min-height: 100vh;
 }
 
+/* Button jiggle on hover */
+@keyframes btn-jiggle {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  15% { transform: rotate(-2deg) translateY(-1px); }
+  30% { transform: rotate(2deg) translateY(0); }
+  45% { transform: rotate(-1.5deg) translateY(-1px); }
+  60% { transform: rotate(1.5deg) translateY(0); }
+  75% { transform: rotate(-0.5deg) translateY(-1px); }
+}
+.btn-jiggle:hover {
+  animation: btn-jiggle 0.5s ease-in-out;
+}
+
 /* Duolingo-style button base */
 @layer components {
   .btn-bob {
     @apply font-display font-semibold text-lg rounded-2xl px-6 py-4 shadow-bob-sm
            transition transform active:translate-y-0.5 active:shadow-none
-           border-0 cursor-pointer;
+           border-0 cursor-pointer btn-jiggle;
   }
   .btn-bob-green {
     @apply btn-bob bg-bob-green text-white hover:bg-bob-green-dark shadow-bob;
@@ -97,6 +110,19 @@ body {
   transform: rotateX(40deg);
   transform-style: preserve-3d;
   transform-origin: center top;
+}
+
+/* Note Highway steeper angled perspective */
+.highway-perspective {
+  perspective: 700px;
+  perspective-origin: center top;
+  min-height: 260px;
+}
+.highway-tilt {
+  transform: rotateX(48deg);
+  transform-style: preserve-3d;
+  transform-origin: center top;
+  backface-visibility: hidden;
 }
 
 /* Fretboard wood grain - rosewood/mahogany style */
@@ -245,6 +271,9 @@ body {
 .practice-btn {
   border: 2px solid rgba(80, 70, 55, 0.5);
   box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+}
+.practice-btn:hover {
+  animation: btn-jiggle 0.5s ease-in-out;
 }
 .practice-btn-active {
   border: 2px solid rgba(200, 170, 80, 0.8);

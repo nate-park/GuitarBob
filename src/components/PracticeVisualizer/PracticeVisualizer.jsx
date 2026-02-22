@@ -75,8 +75,18 @@ export default function PracticeVisualizer({
     activeGlowCells.set(k, v.quality);
   }
 
-  const highwayHeight = 200;
-  const hitLineY = 180;
+  const highwayHeight = 320;
+  const hitLineY = 300;
+
+  // Preview cells: upcoming notes (on highway, not yet hit) - hollow outline on fretboard
+  const previewCells = new Set();
+  const notes = songData?.notes ?? [];
+  for (const n of notes) {
+    if (n.time > currentTime && n.time <= currentTime + lookahead) {
+      const key = `${n.string}-${n.fret}`;
+      if (!activeGlowCells.has(key)) previewCells.add(key);
+    }
+  }
 
   return (
     <div
@@ -93,8 +103,10 @@ export default function PracticeVisualizer({
         ref={containerRef}
         className="rounded-xl overflow-hidden practice-visualizer-inner relative"
       >
-        {/* Falling notes - Canvas */}
-        <NoteHighway
+        {/* Falling notes - Canvas with steep perspective */}
+        <div className="highway-perspective overflow-hidden">
+          <div className="highway-tilt">
+            <NoteHighway
           currentTimeRef={currentTimeRef}
           songData={songData}
           lookahead={lookahead}
@@ -103,11 +115,13 @@ export default function PracticeVisualizer({
           hitLineY={hitLineY}
           frets={frets}
           onNoteHit={onNoteHit}
-        />
+            />
+          </div>
+        </div>
 
         {/* Horizontal fretboard */}
         <div className="p-2">
-          <GuitarNeck frets={frets} glowCells={activeGlowCells} />
+          <GuitarNeck frets={frets} glowCells={activeGlowCells} previewCells={previewCells} />
         </div>
       </div>
 
