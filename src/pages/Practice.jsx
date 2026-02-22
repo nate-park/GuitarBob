@@ -1,13 +1,15 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import TopBar from '../components/TopBar';
 import GuitarHeroFretboard from '../components/GuitarHeroFretboard';
 import PracticeVisualizer from '../components/PracticeVisualizer';
+import ChordDiagram, { CHORD_DATA } from '../components/ChordDiagram';
 import { MOCK_SONG } from '../data/mockSongData';
 import { PRACTICE_SONG } from '../data/practiceVisualizerSong';
 
 export default function Practice() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [visualizerMode, setVisualizerMode] = useState('notes'); // 'notes' | 'chords'
   const [currentTime, setCurrentTime] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -87,6 +89,13 @@ export default function Practice() {
     }
   };
 
+  // Unique chords from song (from location.state or MOCK_SONG), filtered to those in chord library
+  const songChords = useMemo(() => {
+    const chords = location.state?.chords ?? MOCK_SONG.chords.map((c) => c.chord);
+    const unique = [...new Set(chords)];
+    return unique.filter((c) => CHORD_DATA[c]);
+  }, [location.state?.chords]);
+
   return (
     <div className="min-h-screen flex flex-col practice-space-bg relative">
       <TopBar streak={1} xp={50} />
@@ -132,26 +141,15 @@ export default function Practice() {
         {/* Visualizer */}
         <div className="mt-4">
           {visualizerMode === 'notes' ? (
-            <PracticeVisualizer
-              currentTime={currentTime / 1000}
-              songData={PRACTICE_SONG}
-              lookahead={3}
-              frets={12}
-            />
-          ) : (
-            <GuitarHeroFretboard
-              songData={MOCK_SONG}
-              currentTime={currentTime}
-              lookaheadMs={4000}
-              highwayHeight={360}
-              hitLineY={300}
-              hitWindowMs={150}
-            />
-          )}
-        </div>
-
-        {/* Progress bar (keeps slider in sync) */}
-        <div className="mt-6">
+            <>
+              <PracticeVisualizer
+                currentTime={currentTime / 1000}
+                songData={PRACTICE_SONG}
+                lookahead={3}
+                frets={12}
+              />
+              {/* Progress bar (notes mode) */}
+              <div className="mt-6">
           <div className="bg-amber-900/30 rounded-full h-2.5 overflow-hidden border border-amber-800/40">
             <div
               className="h-full bg-gradient-to-r from-amber-400 to-amber-300 rounded-full"
@@ -161,8 +159,29 @@ export default function Practice() {
             />
           </div>
         </div>
+            </>
+          ) : (
+            /* Chord Mode: clickable chord grid from song */
+            <div className="practice-card rounded-3xl p-6">
+              <h2 className="font-display text-xl practice-header-text mb-4">Chords in this song</h2>
+              <p className="font-body practice-subtext text-sm mb-6">Click a chord for a closer look with note names and intervals</p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                {songChords.map((chordKey) => (
+                  <Link
+                    key={chordKey}
+                    to={`/chord/${chordKey}`}
+                    className="flex flex-col items-center p-4 rounded-2xl border-2 border-amber-800/30 hover:border-bob-green/50 hover:bg-bob-green/10 transition-all"
+                  >
+                    <ChordDiagram chord={chordKey} size={110} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
 
-        {/* Audio Controls */}
+        {/* Audio Controls (notes mode only) */}
+        {visualizerMode === 'notes' && (
         <div className="mt-8 practice-card rounded-3xl p-6 relative overflow-hidden">
           <div className="flex flex-wrap gap-4 justify-center items-center">
             {/* Speed controls - always visible */}
@@ -221,6 +240,7 @@ export default function Practice() {
             </p>
           </div>
         </div>
+        )}
 
         {/* Back button */}
         <button

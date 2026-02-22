@@ -16,6 +16,7 @@ export default function BobWithSpeech({
     <div className={`flex items-end gap-4 ${side === 'right' ? 'flex-row-reverse' : ''} ${className}`}>
       <Mascot pose={pose} size={bobSize} />
       <div
+        key={message}
         className={
           side === 'right'
             ? 'speech-bubble rounded-br-none rounded-bl-2xl'

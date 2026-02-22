@@ -7,6 +7,7 @@ import Processing from './pages/Processing';
 import Results from './pages/Results';
 import Practice from './pages/Practice';
 import Chords from './pages/Chords';
+import ChordDetail from './pages/ChordDetail';
 import CharacterShop from './pages/CharacterShop';
 import Tuner from './pages/Tuner';
 
@@ -23,6 +24,7 @@ export default function App() {
           <Route path="/processing" element={<Processing />} />
           <Route path="/results" element={<Results />} />
           <Route path="/practice" element={<Practice />} />
+          <Route path="/chord/:chordKey" element={<ChordDetail />} />
           <Route path="/visualizer" element={<Navigate to="/practice" replace />} />
         </Routes>
       </BrowserRouter>

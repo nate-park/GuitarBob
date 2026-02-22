@@ -51,7 +51,7 @@ export default function Results() {
         </div>
         <div className="mt-8 flex gap-4">
           <button
-            onClick={() => navigate('/practice', { state: { file: fileName } })}
+            onClick={() => navigate('/practice', { state: { file: fileName, chords: MOCK_CHORDS } })}
             className="btn-bob-green flex-1"
           >
             Practice with Bob

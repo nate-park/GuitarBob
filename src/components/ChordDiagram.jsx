@@ -345,6 +345,7 @@ const CHORD_DATA = {
   },
 };
 
+export { CHORD_DATA };
 export default function ChordDiagram({ chord, size = 140 }) {
   const chordData = CHORD_DATA[chord];
 
