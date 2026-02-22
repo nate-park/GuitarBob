@@ -10,72 +10,74 @@ export default function Practice() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentChord, setCurrentChord] = useState(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
-  const rafRef = useRef(null);
-  const playStartTimeRef = useRef(null);
-  const pausedTimeRef = useRef(0);
-  const playbackSpeedRef = useRef(playbackSpeed);
-  playbackSpeedRef.current = playbackSpeed;
+  const intervalRef = useRef(null);
+  const lastTickRef = useRef(0);
 
   const SPEEDS = [0.25, 0.5, 0.75, 1];
 
-  // Use RAF for smooth time updates (scaled by playback speed)
-  // playbackSpeedRef ensures the loop always reads latest speed (avoids stale closure)
+  // Tick interval in ms - how often we update the slider
+  const TICK_MS = 50;
+
+  // setInterval-based playback: each tick advances (TICK_MS * speed) ms of song time
+  // At 0.25x: 1 real second advances 0.25 song seconds (4 real sec = 1 song sec)
+  // At 1x: 1 real second advances 1 song second
   useEffect(() => {
+    // Always clear any existing interval first (prevents double intervals when deps change)
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
     if (isPlaying) {
-      playStartTimeRef.current = Date.now();
+      lastTickRef.current = Date.now();
 
-      const updateTime = () => {
-        const realElapsed = Date.now() - playStartTimeRef.current;
-        const speed = playbackSpeedRef.current;
-        const elapsed = pausedTimeRef.current + realElapsed * speed;
-        pausedTimeRef.current = elapsed;
-        setCurrentTime(elapsed);
+      const tick = () => {
+        const now = Date.now();
+        const realElapsed = now - lastTickRef.current;
+        lastTickRef.current = now;
+        const advance = realElapsed * playbackSpeed; // ms of song to advance
 
-        if (elapsed >= MOCK_SONG.duration) {
-          setIsPlaying(false);
-          pausedTimeRef.current = MOCK_SONG.duration;
-        } else {
-          rafRef.current = requestAnimationFrame(updateTime);
-        }
+        setCurrentTime((prev) => {
+          const next = Math.min(prev + advance, MOCK_SONG.duration);
+          if (next >= MOCK_SONG.duration) {
+            setTimeout(() => setIsPlaying(false), 0);
+          }
+          return next;
+        });
       };
-      rafRef.current = requestAnimationFrame(updateTime);
+
+      intervalRef.current = setInterval(tick, TICK_MS);
     } else {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     }
     return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
   }, [isPlaying, playbackSpeed]);
 
   const handlePlayPause = () => {
-    if (isPlaying) {
-      pausedTimeRef.current = currentTime;
-      setIsPlaying(false);
-    } else {
-      setIsPlaying(true);
-    }
+    setIsPlaying((p) => !p);
   };
 
   const handleStop = () => {
     setIsPlaying(false);
     setCurrentTime(0);
-    pausedTimeRef.current = 0;
   };
 
   const handleReplay = () => {
     setCurrentTime(0);
-    pausedTimeRef.current = 0;
     setIsPlaying(true);
   };
 
   const handleSeek = (time) => {
     if (!isPlaying) {
       setCurrentTime(time);
-      pausedTimeRef.current = time;
     }
   };
 
